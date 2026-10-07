@@ -9,6 +9,8 @@ import arrow from "../assets/loginpage/arrow.png";
 import forgotmail from "../assets/loginpage/forgotmail.png";
 import sms from "../assets/loginpage/sms.png";
 import backarrow from "../assets/loginpage/backarrow.png";
+
+
 export const ForgetPassword = () => {
   const navigate = useNavigate();
   const [method, setMethod] = useState("email");
