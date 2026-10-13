@@ -6,30 +6,15 @@ import protect from "../assets/loginpage/protect.png";
 import ims from "../assets/loginpage/ims.png";
 import successTick from "../assets/loginpage/successTick.png";
 import badgeIcon from "../assets/loginpage/badgeIcon.png";
+import { Header } from "../reusable-components/Header";
+
+
 export const PasswordResetSuccess = () => {
   const navigate = useNavigate();
   return (
     <div className="ims-resetpasswordsuccess-main">
       <div className="ims-resetpasswordsuccess-leftcontainer">
-        <div className="ims-resetpasswordsuccess-navbar">
-          <div className="ims-resetpasswordsuccess-logo">
-            <img
-              src={ims}
-              alt="Internims"
-              className="ims-resetpasswordsuccess-ims-image"
-            />
-            <div className="ims-resetpasswordsuccess-logo-text">
-              <h3>Internship Management System</h3>
-              <p className="ims-resetpasswordsuccess-tagline">
-                <span>Learn</span>
-                <i></i>
-                <span>Grow</span>
-                <i></i>
-                <span>Build Your Future</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <Header/>
         <div className="ims-resetpasswordsuccess-left-content">
           <h1>
             Account Secured & Access
@@ -81,7 +66,7 @@ export const PasswordResetSuccess = () => {
               alt="Security"
               className="ims-resetpasswordsuccess-badge-icon"
             />
-            <span>RECOVERY COMPLETED • 256-BIT ENCRYPTED</span>
+            <span>RECOVERY COMPLETED &bull; 256-BIT ENCRYPTED</span>
           </div>
           <h1>Password Reset Successful!</h1>
           <p className="ims-resetpasswordsuccess-success-description">

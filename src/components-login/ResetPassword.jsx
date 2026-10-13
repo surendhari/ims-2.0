@@ -8,6 +8,9 @@ import lock from "../assets/loginpage/lock.png";
 import forgot from "../assets/loginpage/forgot.png";
 import protectcode from "../assets/loginpage/protect1.png";
 import arrow from "../assets/loginpage/arrow.png";
+import { Header } from "../reusable-components/Header";
+
+
 export const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -38,25 +41,7 @@ export const ResetPassword = () => {
   return (
     <div className="ims-resetpassword-main">
       <div className="ims-resetpassword-leftcontainer">
-        <div className="ims-resetpassword-navbar">
-          <div className="ims-resetpassword-logo">
-            <img
-              src={ims}
-              alt="Internims"
-              className="ims-resetpassword-ims-image"
-            />
-            <div className="ims-resetpassword-logo-text">
-              <h3>Internship Management System</h3>
-              <p className="ims-resetpassword-tagline">
-                <span>Learn</span>
-                <i></i>
-                <span>Grow</span>
-                <i></i>
-                <span>Build Your Future</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <Header/>
         <div className="ims-resetpassword-left-content">
           <h1>Set a Strong Master Password</h1>
           <p className="ims-resetpassword-description">

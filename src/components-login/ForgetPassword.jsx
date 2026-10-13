@@ -9,7 +9,7 @@ import arrow from "../assets/loginpage/arrow.png";
 import forgotmail from "../assets/loginpage/forgotmail.png";
 import sms from "../assets/loginpage/sms.png";
 import backarrow from "../assets/loginpage/backarrow.png";
-
+import {Header} from "../reusable-components/Header";
 
 export const ForgetPassword = () => {
   const navigate = useNavigate();
@@ -17,25 +17,7 @@ export const ForgetPassword = () => {
   return (
     <div className="ims-forgotpassword-main">
       <div className="ims-forgotpassword-leftcontainer">
-        <div className="ims-forgotpassword-navbar">
-          <div className="ims-forgotpassword-logo">
-            <img
-              src={ims}
-              alt="Internims"
-              className="ims-forgotpassword-ims-image"
-            />
-            <div className="ims-forgotpassword-logo-text">
-              <h3>Internship Management System</h3>
-              <p className="ims-forgotpassword-tagline">
-                <span>Learn</span>
-                <i></i>
-                <span>Grow</span>
-                <i></i>
-                <span>Build Your Future</span>
-              </p>
-            </div>
-          </div>
-        </div>
+    <Header/>
         <div className="ims-forgotpassword-left-content">
           <h1>
             Secure Account Recovery &
@@ -43,8 +25,7 @@ export const ForgetPassword = () => {
             Identity Protection
           </h1>
           <p className="ims-forgotpassword-description">
-            Quickly regain access to your verified internship credentials,
-            university approvals, <br />
+            Quickly regain access to your verified internship credentials,university approvals, <br />
             and active corporate placements.
           </p>
           <div className="ims-forgotpassword-illustration-container">

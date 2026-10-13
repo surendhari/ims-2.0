@@ -12,6 +12,7 @@ import yoy from "../assets/loginpage/yoy.png";
 import deans from "../assets/loginpage/deans.png";
 import login from "../assets/loginpage/login.png";
 import protect from "../assets/loginpage/protect.png";
+import { Header } from "../reusable-components/Header";
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -46,21 +47,7 @@ export const LoginPage = () => {
   return (
     <div className="ims-login-main">
       <div className="ims-login-leftcontainer">
-        <div className="ims-login-navbar">
-          <div className="ims-login-logo">
-            <img src={ims} alt="Internims" className="ims-login-ims-image" />
-            <div className="ims-login-logo-text">
-              <h3>Internship Management System</h3>
-              <p className="ims-login-tagline">
-                <span>Learn</span>
-                <i></i>
-                <span>Grow</span>
-                <i></i>
-                <span>Build</span>
-              </p>
-            </div>
-          </div>
-        </div>
+       <Header/>
         <div className="ims-login-left-content">
           <h1>
             Connecting academic talent with

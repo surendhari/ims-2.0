@@ -7,6 +7,7 @@ import ims from "../assets/loginpage/ims.png";
 import lock from "../assets/loginpage/lock.png";
 import arrow from "../assets/loginpage/arrow.png";
 import protectcode from "../assets/loginpage/protect1.png";
+import { Header } from "../reusable-components/Header";
 
 export const OtpForgotPassword = () => {
   const navigate = useNavigate();
@@ -40,25 +41,7 @@ export const OtpForgotPassword = () => {
   return (
     <div className="ims-otpforgotpassword-main">
       <div className="ims-otpforgotpassword-leftcontainer">
-        <div className="ims-otpforgotpassword-navbar">
-          <div className="ims-otpforgotpassword-logo">
-            <img
-              src={ims}
-              alt="Internims"
-              className="ims-otpforgotpassword-ims-image"
-            />
-            <div className="ims-otpforgotpassword-logo-text">
-              <h3>Internship Management System</h3>
-              <p className="ims-otpforgotpassword-tagline">
-                <span>Learn</span>
-                <i></i>
-                <span>Grow</span>
-                <i></i>
-                <span>Build Your Future</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <Header/>
         <div className="ims-otpforgotpassword-left-content">
           <h1>
             Verify Identity & Enter

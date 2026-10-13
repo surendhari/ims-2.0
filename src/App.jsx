@@ -1,11 +1,13 @@
 import React from "react";
+import './App.css'
 import {createBrowserRouter,RouterProvider} from "react-router-dom";
-import { LandingPage } from "./components-login/LandingPage.jsx";
+import { LandingPage } from "./components-landing/LandingPage.jsx";
 import { LoginPage } from "./components-login/LoginPage";
 import {ForgetPassword} from "./components-login/ForgetPassword.jsx";
 import { OtpForgotPassword } from "./components-login/OtpForgotPassword.jsx";
 import { ResetPassword } from "./components-login/ResetPassword.jsx";
 import { PasswordResetSuccess } from "./components-login/PasswordResetSuccess.jsx";
+import { Welcome } from "./components-registration/Welcome.jsx";
 
 
 const router = createBrowserRouter([
@@ -33,6 +35,10 @@ const router = createBrowserRouter([
   {
     path:"/components-login/resetpasswordsuccess",
     element:<PasswordResetSuccess/>
+  },
+  {
+    path:"/components-registration/welcome",
+    element:<Welcome/>
   }
 ]);
 
