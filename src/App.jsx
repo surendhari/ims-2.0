@@ -8,6 +8,11 @@ import { OtpForgotPassword } from "./components-login/OtpForgotPassword.jsx";
 import { ResetPassword } from "./components-login/ResetPassword.jsx";
 import { PasswordResetSuccess } from "./components-login/PasswordResetSuccess.jsx";
 import { Welcome } from "./components-registration/Welcome.jsx";
+import { CompanyRegistration } from "./components-registration/CompanyRegistration.jsx";
+import { InternRegistration } from "./components-registration/InternRegistration.jsx";
+import { AdminRegistration } from "./components-registration/AdminRegistration.jsx";
+import { MentorRegistration } from "./components-registration/MentorRegistration.jsx";
+import { HrRegistration } from "./components-registration/HRRegistration.jsx";
 
 
 const router = createBrowserRouter([
@@ -39,6 +44,26 @@ const router = createBrowserRouter([
   {
     path:"/components-registration/welcome",
     element:<Welcome/>
+  }, 
+   {
+    path:"/components-registration/CompanyRegistration",
+    element:<CompanyRegistration/>
+  }, 
+   {
+    path:"/components-registration/InternRegistration",
+    element:<InternRegistration/>
+  }, 
+   {
+    path:"/components-registration/AdminRegistration",
+    element:<AdminRegistration/>
+  }, 
+   {
+    path:"/components-registration/MentorRegistration",
+    element:<MentorRegistration/>
+  }, 
+   {
+    path:"/components-registration/HrRegistration",
+    element:<HrRegistration/>
   }
 ]);
 

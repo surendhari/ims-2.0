@@ -178,7 +178,7 @@ export const LoginPage = () => {
               Don't have an account?{" "}
               <span
                 className="ims-login-create-link"
-                onClick={() => navigate("/components-login/login")}
+                onClick={() => navigate("/components-registration/welcome")}
               >
                 Create Account
               </span>

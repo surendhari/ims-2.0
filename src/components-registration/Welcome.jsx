@@ -1,4 +1,5 @@
 import React , { useState }  from 'react'
+import { useNavigate } from "react-router-dom";
 import "./Welcome.css";
 import welcome from "../assets/registration/welcome.png";
 import auditsub from "../assets/registration/auditsub.png";
@@ -7,14 +8,15 @@ import author from "../assets/registration/author.png";
 import dropdown from "../assets/registration/dropdown.png";
 
 export const Welcome=()=> {
+const navigate = useNavigate();
 
 const roles = [
   "Intern",
-  "Mentor",
-  "Candidate",
+  "Mentor",  
   "HR",
   "Company",
   "Recruiter",
+  "Candidate",
   "Training Coordinator",
   "Placement Officer",
 ];
@@ -96,20 +98,29 @@ const roles = [
 
         {isOpen && (
           <div className="ims-welcome-role-dropdown-menu">
-            {roles.map((role) => (
-              <div
-                key={role}
-                className={`ims-welcome-role-option ${
-                  selectedRole === role ? "selected" : ""
-                }`}
-                onClick={() => {
-                  setSelectedRole(role);
-                  setIsOpen(false);
-                }}
-              >
-                {role}
-              </div>
-            ))}
+          {roles.map((role) => (
+  <div
+    key={role}
+    className={`ims-welcome-role-option ${
+      selectedRole === role ? "selected" : ""
+    }`}
+    onClick={() => {
+      setSelectedRole(role);
+      setIsOpen(false);
+
+      const roleRoutes = {
+        Company: "/components-registration/CompanyRegistration",
+        Intern:"/components-registration/InternRegistration",
+        Mentor:"/components-registration/MentorRegistration",
+        HR:"/components-registration/HrRegistration"
+      };
+
+      navigate(roleRoutes[role]);
+    }}
+  >
+    {role}
+  </div>
+))}
           </div>
         )}
       </div>
