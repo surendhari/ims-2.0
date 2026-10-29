@@ -286,11 +286,61 @@
   font-family: Hanken Grotesk;
   font-size: 16px;
   color: #111112;
+  flex-shrink: 0;
 }
 
-.ims-phone-number-field {
+.ims-company-registration-verify-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ims-company-registration-input-with-verify {
+  padding-right: 88px;
+}
+
+.ims-company-registration-verify-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #3C5275;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.ims-company-registration-verify-btn:hover:not(:disabled) {
+  background-color: #314463;
+}
+
+.ims-company-registration-verify-btn.ims-verified {
+  background-color: #10B981;
+  color: #ffffff;
+  cursor: default;
+  font-weight: 600;
+}
+
+.ims-phone-number-field-container {
   flex: 1;
-  width: auto; 
+  min-width: 0;
+  height: 42px;
+}
+
+.ims-phone-number-field-container .ims-phone-number-field {
+  width: 100%;
+  height: 42px;
 }
 
 .ims-company-registration-dropDown{

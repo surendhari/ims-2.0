@@ -15,10 +15,6 @@ const roles = [
   "Mentor",  
   "HR",
   "Company",
-  "Recruiter",
-  "Candidate",
-  "Training Coordinator",
-  "Placement Officer",
 ];
 
 

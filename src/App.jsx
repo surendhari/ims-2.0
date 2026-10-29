@@ -12,8 +12,8 @@ import { CompanyRegistration } from "./components-registration/CompanyRegistrati
 import { InternRegistration } from "./components-registration/InternRegistration.jsx";
 import { AdminRegistration } from "./components-registration/AdminRegistration.jsx";
 import { MentorRegistration } from "./components-registration/MentorRegistration.jsx";
-import { HrRegistration } from "./components-registration/HRRegistration.jsx";
-
+import { HRRegistration } from "./components-registration/HRRegistration.jsx";
+import { RegistrationOTP } from "./components-registration/RegistrationOTP.jsx";
 
 const router = createBrowserRouter([
   {
@@ -62,8 +62,12 @@ const router = createBrowserRouter([
     element:<MentorRegistration/>
   }, 
    {
-    path:"/components-registration/HrRegistration",
-    element:<HrRegistration/>
+    path:"/components-registration/HRRegistration",
+    element:<HRRegistration/>
+  }, 
+   {
+    path:"/RegistrationOTP",
+    element:<RegistrationOTP/>
   }
 ]);
 
