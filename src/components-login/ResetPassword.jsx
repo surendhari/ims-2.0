@@ -36,7 +36,7 @@ export const ResetPassword = () => {
       return;
     }
     setError("");
-    navigate("/components-login/resetpasswordsuccess");
+    navigate("/resetpasswordsuccess");
   };
   return (
     <div className="ims-resetpassword-main">
@@ -159,7 +159,7 @@ export const ResetPassword = () => {
             <img src={arrow} alt="" />
           </button>
           <div className="ims-reset-login-link">
-            <Link to="/components-login/login" className="ims-back-link">
+            <Link to="/login" className="ims-back-link">
               Back to Login
             </Link>
           </div>

@@ -78,7 +78,7 @@ export const PasswordResetSuccess = () => {
           </p>
           <button
             className="ims-resetpasswordsuccess-login-btn"
-            onClick={() => navigate("/components-login/login")}
+            onClick={() => navigate("/login")}
           >
             Back to Login
           </button>

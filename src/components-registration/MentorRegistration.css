@@ -3,76 +3,49 @@
   justify-content: center;
   width: 100%;
   max-width: 1920px;
+  padding: 20px;
+  margin: 0;
   min-height: 100vh;
-  margin: 0 auto;
-  padding: 55px 80px;
-  box-sizing: border-box;
-  background: linear-gradient(270deg, #ffffff 35%, #566b93 93%);
+  background: linear-gradient(to left, #FFFFFF 40%, #566B94 93%);
 }
 
 .ims-mentor-inner-container {
   display: flex;
-  width: 100%;
-  max-width: 1760px;
+  width: 50%;
   height: auto;
-  gap: 80px;
-  box-sizing: border-box;
 }
 
-.ims-mentor-left-section {
-  flex: 1;
-  width: 0;
-  min-width: 0;
-  height: auto;
-  box-sizing: border-box;
-}
 
 .Ims-MentorRegister-leftcontent {
-  width: 100%;
-  max-width: 810px;
+  width: 50%;
   height: auto;
-  box-sizing: border-box;
 }
 
-.Ims-MentorRegister-leftheader {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 14px;
-}
-
-.Ims-MentorRegister-middle-content {
-  display: grid;
-  gap: 35px;
-  width: 100%;
-}
 
 .Ims-MentorRegister-main-content h2 {
   width: 100%;
-  max-width: 671px;
-  margin-top: 25px;
   color: #ffffff;
   font-weight: 700;
-  font-size: 34px;
+  font-size: 24px;
   line-height: 1.3;
   box-sizing: border-box;
 }
 
 .Ims-MentorRegister-main-content p {
   width: 100%;
-  max-width: 834px;
   height: auto;
   margin-top: 12px;
   color: #ffffff;
   font-weight: 400;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
 .Ims-MentorRegister-image-content {
-  display: grid;
-  justify-content: center;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  width: 90%;
   box-sizing: border-box;
 }
 
@@ -82,13 +55,13 @@
   max-width: 450px;
   height: auto;
   padding-left: 0;
-  margin: 0 auto 20px;
+  
   box-sizing: border-box;
 }
 
 .ims-mentor-bottom-card-container {
   width: 100%;
-  margin: 40px 0 0;
+ 
   box-sizing: border-box;
 }
 
@@ -259,7 +232,7 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  height: 50px;
+  height: 45px;
   padding: 13px 16px;
   border: 1px solid #132a5680;
   border-radius: 8px;
@@ -280,7 +253,7 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  height: 50px;
+  height: 45px;
   padding: 13px 16px;
   box-sizing: border-box;
 }
@@ -288,7 +261,7 @@
 .mentor-input-conatiner select {
   width: 100%;
   min-width: 0;
-  height: 50px;
+  height: 45px;
   padding: 10px;
   appearance: none;
   box-sizing: border-box;
@@ -312,7 +285,7 @@
 .ims-mentor-phoneNumber-conatiner select {
   width: 60px;
   min-width: 60px;
-  height: 50px;
+  height: 45px;
   padding: 8px;
   border: 1px solid #132a5680;
   border-radius: 8px;
@@ -335,7 +308,7 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  height: 50px;
+  height: 45px;
   margin: 0;
   padding: 0 85px 0 15px;
   border: 1px solid #132a5680;
@@ -348,26 +321,24 @@
 
 .ims-mentor-verify-btn,
 .ims-mentor-verified-btn {
-  position: absolute;
+ position: absolute;
+  right: 6px;
   top: 50%;
-  right: 8px;
   transform: translateY(-50%);
+  background-color: #132A56;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 60px;
-  height: 32px;
-  margin: 0;
-  padding: 0 12px;
-  border: 1px solid transparent;
-  border-radius: 14px;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
   line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-  box-sizing: border-box;
+  z-index: 2;
+  transition: all 0.2s ease;
 }
 
 .ims-mentor-verify-btn {
@@ -385,22 +356,19 @@
 }
 
 .ims-mentor-verified-btn {
-  background-color: #28a745;
-  border-color: #28a745;
+   background: green;
+  color: #ffffff;
   cursor: default;
+  font-weight: 600;
 }
 
-.ims-mentor-verified-btn:hover {
-  background-color: #218838;
-  border-color: #218838;
-}
 
 .ims-mentor-Experience select {
   display: block;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 50px;
+  height: 45px;
   padding: 13px 36px 14px 16px;
   border: 1px solid #132a5680;
   border-radius: 8px;
@@ -430,7 +398,7 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  height: 122px;
+  
   padding: 12px 16px 60px;
   border: 1px solid #132a5680;
   border-radius: 8px;
@@ -445,7 +413,6 @@
 }
 
 .ims-mentor-label-container p {
-  font-family: "Hanken Grotesk", sans-serif;
   font-weight: 500;
   font-size: 12px;
   color: #333334;
@@ -464,7 +431,7 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 50px;
+  height: 45px;
   box-sizing: border-box;
 }
 
@@ -492,8 +459,8 @@
 }
 
 .ims-mentor-checkbox {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 4px;
   border: 1px solid #132a5680;
   box-sizing: border-box;
@@ -587,6 +554,17 @@
   color: #176789;
 }
 
+.ims-mentor-backbtn{
+  background: #132A56;
+  color: white;
+  padding: 10px;
+  width: 130px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: none;
+  cursor: pointer;
+}
+
 .ims-mentor-error-message,
 .ims-mentor-skill-error-message {
   color: red;
@@ -613,12 +591,10 @@
 }
 
 @media screen and (min-width: 1025px) and (max-width: 1599px) {
-  .ims-mentor-conatiner {
-    padding: 55px 60px;
-  }
+ 
 
   .ims-mentor-inner-container {
-    gap: 40px;
+    gap: 20px;
   }
 
   .Ims-MentorRegister-main-content h2 {
@@ -640,7 +616,7 @@
     min-height: 100vh;
     height: auto;
     margin: 0 auto;
-    padding: 30px 50px;
+   
     box-sizing: border-box;
   }
 

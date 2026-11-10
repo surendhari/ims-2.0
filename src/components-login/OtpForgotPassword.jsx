@@ -36,7 +36,7 @@ export const OtpForgotPassword = () => {
       return;
     }
     setError("");
-    navigate("/components-login/resetpassword");
+    navigate("/resetpassword");
   };
   return (
     <div className="ims-otpforgotpassword-main">

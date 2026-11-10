@@ -3,7 +3,10 @@
     max-width: 1920px;
     background: linear-gradient(to left, #FFFFFF 40%, #566B94 93%);
     overflow: hidden;
+    justify-content: center;
+    align-items: center;
     display: flex;
+    height: 100vh;
 }
 
 .ims-welcome-leftcontainer{
@@ -47,7 +50,7 @@
      display: flex; 
      gap: 20px;
      background-color: #FFFFFFBF;
-     padding: 20px;
+     padding: 10px;
      border-radius: 12px;
 }    
 
@@ -79,7 +82,7 @@
 .ims-welcome-hr-div{
     display: flex;
     flex-direction: column;
-    margin: 40px 0px;
+    margin: 20px 0px;
 }
 
 .ims-welcome-para{
@@ -96,7 +99,7 @@
 .ims-welcome-author{
     display: flex;
     gap: 20px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .ims-welcome-author-text{
@@ -107,7 +110,10 @@
 
 .ims-welcome-rightcontainer{
     width: 50%;  
-    padding: 70px  0px;
+    display: flex;
+    flex-direction: column;
+    padding: 90px 0px;
+   
 }
 
 
@@ -217,8 +223,8 @@
 
 .ims-welcome-role-option:hover,
 .ims-welcome-role-option.selected {
-   background: linear-gradient(to left, #FFFFFF 0%, #566B94 93%);
-    color: #243653;
+   background:#132A56;
+    color:white;
 }
 
 .ims-welcome-role-dropdown-menu::-webkit-scrollbar {

@@ -13,7 +13,6 @@ import { InternRegistration } from "./components-registration/InternRegistration
 import { AdminRegistration } from "./components-registration/AdminRegistration.jsx";
 import { MentorRegistration } from "./components-registration/MentorRegistration.jsx";
 import { HRRegistration } from "./components-registration/HRRegistration.jsx";
-import { RegistrationOTP } from "./components-registration/RegistrationOTP.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,55 +20,55 @@ const router = createBrowserRouter([
     element: <LandingPage />
   },
   {
-    path: "/components-login/login",
+    path: "/login",
     element: <LoginPage/>
   },
    {
-    path: "/components-login/forgotpassword",
+    path: "/forgotpassword",
     element: <ForgetPassword/>
   }
   ,
    {
-    path: "/components-login/otpforgotpassword",
+    path: "/otpforgotpassword",
     element: <OtpForgotPassword/>
   } ,
    {
-    path: "/components-login/resetpassword",
+    path: "/resetpassword",
     element: <ResetPassword/>
   },
   {
-    path:"/components-login/resetpasswordsuccess",
+    path:"/resetpasswordsuccess",
     element:<PasswordResetSuccess/>
   },
   {
-    path:"/components-registration/welcome",
+    path:"/welcome",
     element:<Welcome/>
   }, 
    {
-    path:"/components-registration/CompanyRegistration",
+    path:"/CompanyRegistration",
     element:<CompanyRegistration/>
   }, 
    {
-    path:"/components-registration/InternRegistration",
+    path:"/InternRegistration",
     element:<InternRegistration/>
   }, 
    {
-    path:"/components-registration/AdminRegistration",
+    path:"/AdminRegistration",
     element:<AdminRegistration/>
   }, 
    {
-    path:"/components-registration/MentorRegistration",
+    path:"/MentorRegistration",
     element:<MentorRegistration/>
   }, 
    {
-    path:"/components-registration/HRRegistration",
+    path:"/HRRegistration",
     element:<HRRegistration/>
-  }, 
-   {
-    path:"/RegistrationOTP",
-    element:<RegistrationOTP/>
   }
-]);
+],
+
+
+
+);
 
 function App() {
   return <RouterProvider router={router} />;

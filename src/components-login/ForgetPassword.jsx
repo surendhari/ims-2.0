@@ -110,14 +110,14 @@ export const ForgetPassword = () => {
           </div>
           <button
             className="ims-forgotpassword-verify-btn"
-            onClick={() => navigate("/components-login/otpforgotpassword")}
+            onClick={() => navigate("/otpforgotpassword")}
           >
             Send Verification Code
             <img src={arrow} alt="" />
           </button>
           <div className="ims-forgotpassword-back-login">
             <Link
-              to="/components-login/login"
+              to="/login"
               className="ims-forgotpassword-back-link"
             >
               <img

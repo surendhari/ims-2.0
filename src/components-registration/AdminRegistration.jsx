@@ -4,11 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import "../Components-Registration/AdminRegistration.css";
 import { Header } from "../reusable-components/Header";
 import AdminIcon from "../assets/Registration/admin-icon.png";
-import ShowPassword from "../assets/Registration/eye-open.png";
-import HidePassword from "../assets/Registration/eye-close.png";
-import DropdownArrow from "../assets/Registration/drop-down-arrow.png";
+import eye from "../assets/Registration/eye.png";
+import eyeclose from "../assets/Registration/eyeclose.png";
+import dropdown from "../assets/Registration/dropdown.png";
 import AdminIllustartion from "../assets/registration/admin-vector-illustration.png";
 import WhiteShield from "../assets/registration/shield.png";
+import VerificationPopup from "../reusable-components/RegistrationVerificationPopup";
 
 export const AdminRegistration = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,14 @@ export const AdminRegistration = () => {
     password: "",
     confirmPassword: "",
   });
+
+
+const [verificationOpen, setVerificationOpen] = useState(false);
+const [verificationType, setVerificationType] = useState("");
+const [verificationValue, setVerificationValue] = useState("");
+
+const [isEmailVerified, setIsEmailVerified] = useState(false);
+const [isPhoneVerified, setIsPhoneVerified] = useState(false);
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -86,14 +95,29 @@ export const AdminRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  if (name === "email") {
+    setIsEmailVerified(false);
+  }
+
+  if (name === "phone") {
+    setIsPhoneVerified(false);
+  }
+
+  setErrors((prev) => ({
+    ...prev,
+    [name]: "",
+  }));
+};
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,6 +127,41 @@ export const AdminRegistration = () => {
       navigate("/");
     }
   };
+
+
+  
+const handleVerifyEmail = () => {
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+
+  if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+    setErrors((prev) => ({
+      ...prev,
+      email: "Enter a valid email address",
+    }));
+    return;
+  }
+
+  setVerificationType("email");
+  setVerificationValue(formData.email.trim());
+  setVerificationOpen(true);
+};
+
+const handleVerifyPhone = () => {
+  const phoneRegex = /^[6-9]\d{9}$/;
+
+  if (!phoneRegex.test(formData.phone.trim())) {
+    setErrors((prev) => ({
+      ...prev,
+      phone: "Enter a valid 10-digit mobile number",
+    }));
+    return;
+  }
+
+  setVerificationType("phone");
+  setVerificationValue(formData.phone.trim());
+  setVerificationOpen(true);
+};
+
 
   return (
     <div className="ims-admin-container">
@@ -206,25 +265,54 @@ export const AdminRegistration = () => {
                   )}
                 </div>
 
-                <div className="ims-admin-registration-form-group">
-                  <label className="ims-admin-registration-form-label">
-                    Email Address{" "}
-                    <span className="ims-admin-registration-required">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email address"
-                    className={`ims-admin-registration-form-input ${errors.email ? "ims-admin-registration-error-border" : ""}`}
-                  />
-                  {errors.email && (
-                    <p className="ims-admin-registration-error">
-                      {errors.email}
-                    </p>
-                  )}
-                </div>
+               <div className="ims-admin-registration-email-wrapper">
+  <input
+    type="email"
+    name="email"
+    value={formData.email}
+    onChange={handleChange}
+    placeholder="Enter your email address"
+    className={`ims-admin-registration-form-input ${
+      errors.email ? "ims-admin-registration-error-border" : ""
+    }`}
+  />
+
+  <button
+    type="button"
+    onClick={handleVerifyEmail}
+    disabled={isEmailVerified}
+  >
+    {isEmailVerified ? "Verified" : "Verify"}
+  </button>
+
+     
+
+    
+   
+              </div>
+              
+              {verificationOpen && (
+  <VerificationPopup
+    type={verificationType}
+    value={verificationValue}
+    onClose={() => setVerificationOpen(false)}
+    onSendOtp={async () => true}
+    onVerifyOtp={async (otp) => {
+      if (otp.length === 6) {
+        if (verificationType === "email") {
+          setIsEmailVerified(true);
+        } else {
+          setIsPhoneVerified(true);
+        }
+
+        setVerificationOpen(false);
+        return true;
+      }
+
+      return false;
+    }}
+  />
+)}
               </div>
 
               <div className="ims-admin-registration-form-row">
@@ -316,7 +404,7 @@ export const AdminRegistration = () => {
                     </select>
 
                     <img
-                      src={DropdownArrow}
+                      src={dropdown}
                       alt="DropdownArrow"
                       className="ims-admin-registration-dropdown-arrow"
                     />
@@ -345,7 +433,7 @@ export const AdminRegistration = () => {
                       className={`ims-admin-registration-form-input ${errors.password ? "ims-admin-registration-error-border" : ""}`}
                     />
                     <img
-                      src={showPassword ? HidePassword : ShowPassword}
+                      src={eye ? eyeclose : ShowPassword}
                       className="ims-admin-registration-password-icon"
                       alt="Toggle password visibility"
                       onClick={() => setShowPassword(!showPassword)}
@@ -422,7 +510,7 @@ export const AdminRegistration = () => {
               <div className="ims-admin-registration-signin">
                 <p className="ims-admin-registration-signin-text">
                   Already have an account?{" "}
-                  <Link to="/components-login/login" className="ims-admin-registration-signin-link">
+                  <Link to="/login" className="ims-admin-registration-signin-link">
                     Sign in
                   </Link>
                 </p>

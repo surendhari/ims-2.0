@@ -10,11 +10,11 @@ export const Header=()=> {
             <div className="ims-login-register-logo-text">
               <h3>Internship Management System</h3>
               <p className="ims-login-register-tagline">
-                <span>Learn</span>
+                <span  className="ims-login-register-tagline">Learn</span>
                 <i></i>
-                <span>Grow</span>
+                <span  className="ims-login-register-tagline">Grow</span>
                 <i></i>
-                <span>Build</span>
+                <span  className="ims-login-register-tagline">Build</span>
               </p>
             </div>
           </div>

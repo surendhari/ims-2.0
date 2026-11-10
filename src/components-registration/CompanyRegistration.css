@@ -1,7 +1,10 @@
 .ims-company-registration-page{
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(270deg, #FFFFFF 35%, #566B93 90%);
+    justify-content: center;
+    align-items: center;
+   background: linear-gradient(to left, #ffffff 35%, #566b93 93%);
+    max-width: 1920px;
 }
 
 .ims-company-registration-container{
@@ -13,8 +16,8 @@
 .ims-company-registration-left {
   width: 40%;
   box-sizing: border-box;
-  padding: 34px;
-  padding-left: 80px;
+ 
+ 
   display: flex;
   flex-direction: column;
 }
@@ -86,14 +89,13 @@
     max-width: 600px;
 }
 .ims-company-registration-illustration {
-  flex: 1;
   display: flex;
   align-items: center;      
   justify-content: flex-start;
 }
 
 .ims-company-registration-illustration img {
-  padding-left: 45px; 
+
   max-width: 450px;
   width: 100%;
   height: auto;
@@ -152,13 +154,9 @@
 
 .ims-company-registration-right {
   width: 60%;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;   
-  align-items: stretch;
-  padding: 80px 80px 34px 100px;
-
 }
 
 .ims-company-registration-form-title {
@@ -183,9 +181,8 @@
 }
 
 .ims-company-registration-form-label{
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.5px;
   color: #132A56;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -209,7 +206,7 @@
   border-radius: 8px;
   background-color: #ffffff;
   color: #6B7280; 
-  outline: none;
+
   box-sizing: border-box;
   appearance: none;
   cursor: pointer;
@@ -305,7 +302,7 @@
   right: 6px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: #3C5275;
+  background-color: #132A56;
   color: #ffffff;
   border: none;
   border-radius: 9999px;
@@ -322,11 +319,11 @@
 }
 
 .ims-company-registration-verify-btn:hover:not(:disabled) {
-  background-color: #314463;
+  background-color:#132A56;
 }
 
 .ims-company-registration-verify-btn.ims-verified {
-  background-color: #10B981;
+  background: green;
   color: #ffffff;
   cursor: default;
   font-weight: 600;
@@ -374,8 +371,7 @@
 }
 
 .ims-company-registration-password-toggle img {
-  width: 16px;
-  height: 10px;
+  width: 20px;
   object-fit: contain;
 }
 
@@ -439,6 +435,16 @@
   font-size: 16px;
   font-weight: 400;
   text-align: center;
+}
+.ims-company-backbtn{
+  background: #132A56;
+  color: white;
+  padding: 10px;
+  width: 130px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: none;
+  cursor: pointer;
 }
 
 @media (max-width: 1366px) {

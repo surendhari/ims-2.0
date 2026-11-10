@@ -133,7 +133,7 @@ export const LoginPage = () => {
             <label>Password</label>
             <p
               className="ims-login-forgot-link"
-              onClick={() => navigate("/components-login/forgotpassword")}
+              onClick={() => navigate("/forgotpassword")}
             >
               Forgot Password?
             </p>
@@ -178,7 +178,7 @@ export const LoginPage = () => {
               Don't have an account?{" "}
               <span
                 className="ims-login-create-link"
-                onClick={() => navigate("/components-registration/welcome")}
+                onClick={() => navigate("/welcome")}
               >
                 Create Account
               </span>

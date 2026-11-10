@@ -296,6 +296,9 @@
   margin-left: 5px;
 }
 
+
+
+
 /* lap screen size */
 @media (min-width: 1024px) and (max-width: 1440px) {
   .ims-admin-right-section,

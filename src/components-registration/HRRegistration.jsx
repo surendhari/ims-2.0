@@ -2,12 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./HRRegistration.css";
+import RegistrationVerificationPopup from "../reusable-components/RegistrationVerificationPopup";
 import HRIllustration from "../assets/registration/HRRegistrationIllustration.png";
 import RegisterUsers from "../assets/registration/RegisterUsers.png";
 import CompanyIcon from "../assets/registration/Company-icon.png";
-import ShowPassword from "../assets/registration/ShowPassword.png";
-import HidePassword from "../assets/registration/HidePassword.png";
-import DropdownArrow from "../assets/registration/DropdownArrow.png";
+import eye from "../assets/registration/eye.png";
+import eyeclose from "../assets/registration/eyeclose.png";
+import formdropdown from "../assets/registration/formdropdown.png";
 import { Header } from "../reusable-components/Header";
 
 const HR_DRAFT_KEY = "hrRegistrationDraft";
@@ -35,7 +36,9 @@ export const HRRegistration = () => {
       confirmPassword: draft.formData?.confirmPassword ?? "",
     };
   });
-
+const [showVerificationPopup, setShowVerificationPopup] = useState(false);
+const [verificationType, setVerificationType] = useState("");
+const [verificationValue, setVerificationValue] = useState("");
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -146,73 +149,53 @@ export const HRRegistration = () => {
     }
   };
 
-  const handleEmailVerify = () => {
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+ const handleEmailVerify = () => {
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
 
-    if (!formData.email.trim()) {
-      setErrors((prev) => ({
-        ...prev,
-        email: "Work Email is required",
-      }));
-      return;
-    }
+  if (!formData.email.trim()) {
+    setErrors((prev) => ({
+      ...prev,
+      email: "Work Email is required",
+    }));
+    return;
+  }
 
-    if (!emailRegex.test(formData.email)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: "Enter a valid email address",
-      }));
-      return;
-    }
+  if (!emailRegex.test(formData.email)) {
+    setErrors((prev) => ({
+      ...prev,
+      email: "Enter a valid email address",
+    }));
+    return;
+  }
 
-    sessionStorage.setItem(
-      HR_DRAFT_KEY,
-      JSON.stringify({
-        formData,
-        acceptedTerms,
-        emailVerified,
-        phoneVerified,
-      }),
-    );
+  setVerificationType("email");
+  setVerificationValue(formData.email.trim());
+  setShowVerificationPopup(true);
+};
 
-    navigate("/RegistrationOTP", {
-      state: { type: "email" },
-    });
-  };
+ const handlePhoneVerify = () => {
+  const phoneRegex = /^[6-9]\d{9}$/;
 
-  const handlePhoneVerify = () => {
-    const phoneRegex = /^[6-9]\d{9}$/;
+  if (!formData.phone.trim()) {
+    setErrors((prev) => ({
+      ...prev,
+      phone: "Phone Number is required",
+    }));
+    return;
+  }
 
-    if (!formData.phone.trim()) {
-      setErrors((prev) => ({
-        ...prev,
-        phone: "Phone Number is required",
-      }));
-      return;
-    }
+  if (!phoneRegex.test(formData.phone)) {
+    setErrors((prev) => ({
+      ...prev,
+      phone: "Enter a valid 10-digit mobile number",
+    }));
+    return;
+  }
 
-    if (!phoneRegex.test(formData.phone)) {
-      setErrors((prev) => ({
-        ...prev,
-        phone: "Enter a valid 10-digit mobile number",
-      }));
-      return;
-    }
-
-    sessionStorage.setItem(
-      HR_DRAFT_KEY,
-      JSON.stringify({
-        formData,
-        acceptedTerms,
-        emailVerified,
-        phoneVerified,
-      }),
-    );
-
-    navigate("/RegistrationOTP", {
-      state: { type: "phone" },
-    });
-  };
+  setVerificationType("phone");
+  setVerificationValue(formData.phone.trim());
+  setShowVerificationPopup(true);
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -309,7 +292,9 @@ export const HRRegistration = () => {
       </div>
 
       <div className="ims-hr-registration-right-section">
+         
         <div className="ims-hr-registration-form-container">
+           <button className="ims-hr-registration-backbtn" onClick={() => navigate("/welcome")}> Back to Selection</button>
           <h2 className="ims-hr-registration-form-title">
             Create your account
           </h2>
@@ -326,24 +311,15 @@ export const HRRegistration = () => {
               </label>
 
               <div className="ims-hr-registration-select-wrapper">
-                <select
-                  name="registeringAs"
-                  value={formData.registeringAs}
-                  onChange={handleChange}
-                  className={`ims-hr-registration-form-select ${errors.registeringAs ? "ims-hr-registration-error-border" : ""}`}
-                >
-                  <option value="">Select Role</option>
-                  <option value="Intern">Intern</option>
-                  <option value="Mentor">Mentor</option>
-                  <option value="HR">HR</option>
-                  <option value="Company">Company</option>
-                </select>
-
-                <img
-                  src={DropdownArrow}
-                  alt="DropdownArrow"
-                  className="ims-hr-registration-dropdown-arrow-role"
-                />
+                   <select 
+                          id="ims-company-registration-registering-as"
+                          name="registeringAs"
+                          className="ims-company-registration-form-drop-down" 
+                          defaultValue="Company"
+                          disabled
+                        >
+                          <option value="HR">HR</option>
+                        </select>
               </div>
               {errors.registeringAs && (
                 <p className="ims-hr-registration-error">
@@ -389,7 +365,7 @@ export const HRRegistration = () => {
                     placeholder="john.doe@company.com"
                     className={`ims-hr-registration-form-input ${errors.email ? "ims-hr-registration-error-border" : ""}`}
                   />
-
+                 {formData.email.trim() && (
                   <button
                     type="button"
                     className={`ims-hr-registration-verify-button ${
@@ -398,7 +374,7 @@ export const HRRegistration = () => {
                     onClick={handleEmailVerify}
                   >
                     {emailVerified ? " Verified" : "Verify"}
-                  </button>
+                  </button>)}
                 </div>
 
                 {errors.emailVerification && (
@@ -430,7 +406,7 @@ export const HRRegistration = () => {
                     placeholder="Enter your number"
                     className={`ims-hr-registration-form-input ${errors.phone ? "ims-hr-registration-error-border" : ""}`}
                   />
-
+                  {formData.phone.trim() && (
                   <button
                     type="button"
                     className={`ims-hr-registration-verify-button ${
@@ -439,7 +415,7 @@ export const HRRegistration = () => {
                     onClick={handlePhoneVerify}
                   >
                     {phoneVerified ? " Verified" : "Verify"}
-                  </button>
+                  </button>)}
                 </div>
                 {errors.phoneVerification && (
                   <p className="ims-hr-registration-error">
@@ -472,7 +448,7 @@ export const HRRegistration = () => {
                   </select>
 
                   <img
-                    src={DropdownArrow}
+                    src={formdropdown}
                     alt="DropdownArrow"
                     className="ims-hr-registration-dropdown-arrow"
                   />
@@ -529,7 +505,7 @@ export const HRRegistration = () => {
                   />
 
                   <img
-                    src={showPassword ? HidePassword : ShowPassword}
+                    src={showPassword ? eye: eyeclose }
                     className="ims-hr-registration-password-icon"
                     alt="Eye-icon"
                     onClick={() => setShowPassword(!showPassword)}
@@ -557,7 +533,7 @@ export const HRRegistration = () => {
                   />
 
                   <img
-                    src={showConfirmPassword ? HidePassword : ShowPassword}
+                    src={showConfirmPassword ? eye : eyeclose }
                     className="ims-hr-registration-password-icon"
                     alt="Eye-icon"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -622,6 +598,31 @@ export const HRRegistration = () => {
           </form>
         </div>
       </div>
+
+    {showVerificationPopup && (
+  <RegistrationVerificationPopup
+    type={verificationType}
+    value={verificationValue}
+    onClose={() => setShowVerificationPopup(false)}
+    onVerified={() => {
+      if (verificationType === "email") {
+        setEmailVerified(true);
+        setErrors((prev) => ({
+          ...prev,
+          emailVerification: "",
+        }));
+      } else {
+        setPhoneVerified(true);
+        setErrors((prev) => ({
+          ...prev,
+          phoneVerification: "",
+        }));
+      }
+
+      setShowVerificationPopup(false);
+    }}
+  />
+)}
     </div>
   );
 };

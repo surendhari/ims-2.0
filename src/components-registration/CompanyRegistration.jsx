@@ -1,20 +1,25 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./CompanyRegistration.css"
 import Illustration from "../assets/registration/Illustration-Image.png";
 import Buttomframeone from "../assets/registration/Hiring-icon.png";
 import verifiedIcon from "../assets/registration/Verified-icon.png";
-import DropDownarrowLarge from "../assets/registration/Drop-Down-arrow-large.png"; 
-import DropDownarrowSmall from "../assets/registration/Drop-down-arrow-small.png"
-import EyeOpenIcon from "../assets/registration/Eye-open-icon.png"
-import EyeCloseIcon from "../assets/registration/Eye-close-icon.png"
+import formdropdown from "../assets/registration/formdropdown.png"
+import eye from "../assets/registration/eye.png"
+import eyeclose from "../assets/registration/eyeclose.png"
 import { Header } from "../reusable-components/Header";
+import RegistrationVerificationPopup from "../reusable-components/RegistrationVerificationPopup";
+
 
 const FORM_CACHE_KEY = "ims_company_registration_cache";
 
 export const CompanyRegistration = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showVerificationPopup, setShowVerificationPopup] = useState(false);
+const [verificationType, setVerificationType] = useState("");
+const [verificationValue, setVerificationValue] = useState("");
 
   const [cachedData] = useState(() => {
     try {
@@ -86,64 +91,46 @@ export const CompanyRegistration = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
 
-  const saveFormCache = () => {
-    try {
-      sessionStorage.setItem(
-        FORM_CACHE_KEY,
-        JSON.stringify({
-          companyName,
-          companyWebsite,
-          workEmail,
-          phoneNumber,
-          industry,
-          companySize,
-          registrationNumber,
-          agreedToTerms,
-          isEmailVerified,
-          isPhoneVerified,
-        })
-      );
-    } catch {
+ const handleVerifyEmail = () => {
+  if (isEmailVerified) return;
 
-    }
-  };
+  if (!workEmail.trim()) {
+    setWorkEmailError("Please enter your work email");
+    return;
+  }
 
-  const handleVerifyEmail = (e) => {
-    e?.preventDefault();
-    if (isEmailVerified) return;
-    if (!workEmail.trim()) {
-      setWorkEmailError('Please enter your work email');
-      return;
-    }
-    if (!emailRegex.test(workEmail.trim())) {
-      setWorkEmailError('Please enter a valid work email address');
-      return;
-    }
-    setWorkEmailError('');
-    saveFormCache();
-    navigate("/RegistrationOTP", {
-      state: { type: "email", value: workEmail.trim() }
-    });
-  };
+  if (!emailRegex.test(workEmail.trim())) {
+    setWorkEmailError("Please enter a valid work email address");
+    return;
+  }
 
-  const handleVerifyPhone = (e) => {
-    e?.preventDefault();
-    if (isPhoneVerified) return;
-    const cleanedPhone = phoneNumber.trim().replace(/[\s-]/g, '');
-    if (!phoneNumber.trim()) {
-      setPhoneNumberError('Please enter your phone number');
-      return;
-    }
-    if (!/^\d{10}$/.test(cleanedPhone)) {
-      setPhoneNumberError('Please enter a valid 10-digit phone number');
-      return;
-    }
-    setPhoneNumberError('');
-    saveFormCache();
-    navigate("/components-registration/RegistrationOTP", {
-      state: { type: "phone", value: cleanedPhone }
-    });
-  };
+  setWorkEmailError("");
+  setVerificationType("email");
+  setVerificationValue(workEmail.trim());
+  setShowVerificationPopup(true);
+};
+
+const handleVerifyPhone = () => {
+  if (isPhoneVerified) return;
+
+  const cleanedPhone = phoneNumber.trim().replace(/[\s-]/g, "");
+
+  if (!phoneNumber.trim()) {
+    setPhoneNumberError("Please enter your phone number");
+    return;
+  }
+
+  if (!/^\d{10}$/.test(cleanedPhone)) {
+    setPhoneNumberError("Please enter a valid 10-digit phone number");
+    return;
+  }
+
+  setPhoneNumberError("");
+  setVerificationType("phone");
+  setVerificationValue(cleanedPhone);
+  setShowVerificationPopup(true);
+};
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -243,7 +230,7 @@ export const CompanyRegistration = () => {
     sessionStorage.removeItem(FORM_CACHE_KEY);
   };
   return (
-    <>
+    
     <div className="ims-company-registration-page">
 
       <div className="ims-company-registration-container">
@@ -292,6 +279,9 @@ export const CompanyRegistration = () => {
         </div>
 
         <div className="ims-company-registration-right">
+
+         <button className="ims-company-backbtn" onClick={() => navigate("/welcome")}> Back to Selection</button>
+
           <div className="ims-company-registration-form">
                 <div className="ims-company-registration-form-header">
                     <div className="ims-company-registration-form-title">
@@ -314,11 +304,11 @@ export const CompanyRegistration = () => {
                           name="registeringAs"
                           className="ims-company-registration-form-drop-down" 
                           defaultValue="Company"
+                          disabled
                         >
                           <option value="Company">Company</option>
                         </select>
                      
-                       <img src={DropDownarrowLarge} alt="Down Arrow" className="ims-company-registration-form-select-arrow" />
                        
                       </div>
                       <span className="ims-company-registration-error"></span>
@@ -386,6 +376,7 @@ export const CompanyRegistration = () => {
                                   if (workEmailError) setWorkEmailError(''); 
                                 }} 
                               />
+                              {workEmail.trim() && (
                               <button 
                                 type="button" 
                                 className={`ims-company-registration-verify-btn ${isEmailVerified ? "ims-verified" : ""}`}
@@ -393,8 +384,9 @@ export const CompanyRegistration = () => {
                                 disabled={isEmailVerified}
                               >
                                 {isEmailVerified ? "Verified" : "Verify"}
-                              </button>
+                              </button>)}
                             </div>
+                            
                             <span className="ims-company-registration-error">{workEmailError}</span>
                           </div>
 
@@ -427,6 +419,7 @@ export const CompanyRegistration = () => {
                                       if (phoneNumberError) setPhoneNumberError('');
                                     }}
                                   />
+                                   {phoneNumber.trim() && (
                                   <button 
                                     type="button" 
                                     className={`ims-company-registration-verify-btn ${isPhoneVerified ? "ims-verified" : ""}`}
@@ -435,6 +428,7 @@ export const CompanyRegistration = () => {
                                   >
                                     {isPhoneVerified ? "Verified" : "Verify"}
                                   </button>
+                                   )}
                                 </div>
                             </div>
                             <span className="ims-company-registration-error">{phoneNumberError}</span>
@@ -462,7 +456,7 @@ export const CompanyRegistration = () => {
                           <option value="Finance & Banking">Finance & Banking</option>
                         </select>
                        
-                        <img src={DropDownarrowSmall} alt="Drop Down" className="ims-company-registration-form-select-arrow ims-company-registration-dropDown" />
+                        <img src={formdropdown} alt="Drop Down" className="ims-company-registration-form-select-arrow ims-company-registration-dropDown" />
                        
                       </div>
                       <span className="ims-company-registration-error">{industryError}</span>
@@ -489,7 +483,7 @@ export const CompanyRegistration = () => {
                           <option value="50-200 Employees">50-200 Employees</option>
                         </select>
                        
-                        <img src={DropDownarrowSmall} alt="Drop Down for select" className="ims-company-registration-form-select-arrow ims-company-registration-dropDown" />
+                        <img src={formdropdown} alt="Drop Down for select" className="ims-company-registration-form-select-arrow ims-company-registration-dropDown" />
                       
                       </div>
                       <span className="ims-company-registration-error">{companySizeError}</span>
@@ -542,7 +536,7 @@ export const CompanyRegistration = () => {
                                 aria-label="Toggle password visibility"
                                 >
 
-                                <img src={showPassword ? EyeOpenIcon : EyeCloseIcon} alt="Eye Icon" />
+                                <img src={showPassword ? eye: eyeclose } alt="Eye Icon" />
                               </button>
                            </div>
                            <span className="ims-company-registration-error">{passwordError}</span>
@@ -575,7 +569,7 @@ export const CompanyRegistration = () => {
                                 aria-label="Toggle confirm password visibility"
                                 >
 
-                                <img src={showConfirm ? EyeOpenIcon : EyeCloseIcon} alt="Eye Icon" />
+                                <img src={showConfirm ? eye : eyeclose } alt="Eye Icon" />
                               </button>
                            </div>
                            <span className="ims-company-registration-error">{confirmPasswordError}</span>
@@ -615,7 +609,7 @@ export const CompanyRegistration = () => {
 
                         <div className="ims-company-registration-signin">
                             Already have an account?{" "}
-                            <a href="#" className="ims-company-registration-signin-link">
+                            <a href="/login" className="ims-company-registration-signin-link">
                               Sign in
                             </a>
                           </div>
@@ -623,8 +617,23 @@ export const CompanyRegistration = () => {
         </div>
         </div>
       </div>
+      {showVerificationPopup && (
+        <RegistrationVerificationPopup
+          type={verificationType}
+          value={verificationValue}
+          onClose={() => setShowVerificationPopup(false)}
+          onVerified={() => {
+            if (verificationType === "email") {
+              setIsEmailVerified(true);
+            } else {
+              setIsPhoneVerified(true);
+            }
 
+            setShowVerificationPopup(false);
+          }}
+        />
+      )}
     </div>
-    </>
+ 
   )
 }

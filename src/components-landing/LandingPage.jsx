@@ -27,8 +27,8 @@ const [activeTab, setActiveTab] = useState("Students");
       </div>
       <div className="ims-landingpage-nav-buttons">
      
-        <button className="ims-landingpage-login-btn"   onClick={() => navigate("/components-login/login")}>Login</button>
-        <button className="ims-landingpage-register-btn"   onClick={() => navigate("/components-registration/welcome")}>Register</button>
+        <button className="ims-landingpage-login-btn"   onClick={() => navigate("/login")}>Login</button>
+        <button className="ims-landingpage-register-btn"   onClick={() => navigate("/welcome")}>Register</button>
       </div>
       </nav>
 

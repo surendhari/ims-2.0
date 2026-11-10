@@ -5,9 +5,10 @@ import illustration from '../assets/registration/Intern-Illustration.png';
 import verifiedIcon from '../assets/registration/Verified.png';
 import trackingIcon from '../assets/registration/Tracking.png';
 import avatar from '../assets/registration/Avatar.png';
-import eyeOpen from '../assets/registration/Eye-open.png';
-import chevron from '../assets/registration/dropdown.png';
+import eye from '../assets/registration/eye.png';
+
 import { Header } from '../reusable-components/Header';
+import RegistrationVerificationPopup from '../reusable-components/RegistrationVerificationPopup';
 
 const fieldsOfStudy = [
   'Computer Science',
@@ -63,8 +64,12 @@ function validatePassword(value) {
 
 export const InternRegistration = ()=> {
   const navigate = useNavigate();
-  const saved = useLocation().state?.registration ?? {};
-  const [role, setRole] = useState(saved.role ?? 'Intern');
+  const location = useLocation();
+  const saved = location.state?.registration ?? {};
+  const [role] = useState(location.state?.role ?? saved.role ?? 'Intern');
+  const [showVerificationPopup, setShowVerificationPopup] = useState(false);
+  const [verificationType, setVerificationType] = useState('');
+  const [verificationValue, setVerificationValue] = useState('');
   const [fullName, setFullName] = useState(saved.fullName ?? '');
   const [email, setEmail] = useState(saved.email ?? '');
   const [phone, setPhone] = useState(saved.phone ?? '');
@@ -115,23 +120,6 @@ export const InternRegistration = ()=> {
     setErrors(next);
   };
 
-  const registrationState = () => ({
-    role,
-    fullName,
-    email,
-    phone,
-    dob,
-    college,
-    fieldOfStudy,
-    graduationYear,
-    resume,
-    password,
-    confirmPassword,
-    agreed,
-    emailVerified,
-    phoneVerified,
-  });
-
   const handleVerify = (field) => {
     if (field === 'email' && emailVerified) return;
     if (field === 'phone' && phoneVerified) return;
@@ -143,12 +131,10 @@ export const InternRegistration = ()=> {
       setErrors((current) => ({ ...current, phone: 'Enter a valid 10-digit phone number.' }));
       return;
     }
-    navigate('/RegistrationOTP', {
-      state: {
-        verifyField: field,
-        registration: registrationState(),
-      },
-    });
+    clearError(field);
+    setVerificationType(field);
+    setVerificationValue(field === 'email' ? email.trim() : phone.replace(/\D/g, ''));
+    setShowVerificationPopup(true);
   };
 
   return (
@@ -191,47 +177,35 @@ export const InternRegistration = ()=> {
         </div>
         </div>
 
-        <div className="ims-reg-quote">
-          <p className="ims-reg-quote-text">“InternMS helped me land my dream internship at a Fortune 500<br className="ims-reg-break" />company within 3 weeks of joining.”</p>
-          <div className="ims-reg-quote-by">
-            <span className="ims-reg-avatar">
-              <img className="ims-reg-avatar-img" src={avatar} alt="" />
-            </span>
-            <span className="ims-reg-quote-name">— Sarah J., Product Design Intern</span>
-          </div>
-        </div>
+      
       </section>
 
       <form className="ims-reg-form" onSubmit={handleCreate} noValidate>
+        
         <div className="ims-reg-head">
+          <button type="button" className="ims-company-backbtn" onClick={() => navigate('/welcome')}>
+          Back to Selection
+        </button>
           <h2 className="ims-reg-heading">Create your account</h2>
           <p className="ims-reg-sub">Fill in the details below to create your professional account</p>
         </div>
 
-        <div className={`ims-reg-role${errors.role ? ' ims-reg-invalid' : ''}`}>
-        <label className="ims-reg-label ims-reg-kicker">
-          Registering as <i className="ims-reg-required">*</i>
-        </label>
-        <div className="ims-reg-select ims-reg-select-wide">
-          <select
-            className="ims-reg-select-input"
-
-            value={role}
-            onChange={(e) => {
-              setRole(e.target.value);
-              clearError('role');
-            }}
-            aria-label="Registering as"
-            aria-invalid={Boolean(errors.role)}
-          >
-            <option className="ims-reg-option" value="">Select</option>
-            <option className="ims-reg-option">Intern</option>
-            <option className="ims-reg-option">Student</option>
-            <option className="ims-reg-option">Employer</option>
-          </select>
-          <img className="ims-reg-chevron" src={chevron} alt="" />
-        </div>
-        {errors.role && <p className="ims-reg-error">{errors.role}</p>}
+        <div className="ims-reg-role">
+          <label className="ims-reg-label ims-reg-kicker">
+            Registering as <i className="ims-reg-required">*</i>
+          </label>
+          <div className="ims-reg-select ims-reg-select-wide">
+              <select 
+                          id="ims-company-registration-registering-as"
+                          name="registeringAs"
+                          className="ims-company-registration-form-drop-down" 
+                          defaultValue="Company"
+                          disabled
+                        >
+                          <option value="Intern">Intern</option>
+                        </select>
+           
+          </div>
         </div>
 
         <div className="ims-reg-grid">
@@ -359,7 +333,7 @@ export const InternRegistration = ()=> {
                   <option className="ims-reg-option" key={field}>{field}</option>
                 ))}
               </select>
-              <img className="ims-reg-chevron" src={chevron} alt="" />
+             
             </div>
             {errors.fieldOfStudy && <p className="ims-reg-error">{errors.fieldOfStudy}</p>}
           </div>
@@ -383,7 +357,7 @@ export const InternRegistration = ()=> {
                   <option className="ims-reg-option" key={year}>{year}</option>
                 ))}
               </select>
-              <img className="ims-reg-chevron" src={chevron} alt="" />
+             
             </div>
             {errors.graduationYear && <p className="ims-reg-error">{errors.graduationYear}</p>}
           </div>
@@ -431,7 +405,7 @@ export const InternRegistration = ()=> {
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                 onClick={() => setShowPassword((visible) => !visible)}
               >
-                <img className="ims-reg-eye-open" src={eyeOpen} alt="" />
+                <img className="ims-reg-eye-open" src={eye} alt="" />
                 <span className="ims-reg-eye-shut" />
               </button>
             </div>
@@ -459,7 +433,7 @@ export const InternRegistration = ()=> {
                 aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 onClick={() => setShowConfirmPassword((visible) => !visible)}
               >
-                <img className="ims-reg-eye-open" src={eyeOpen} alt="" />
+                <img className="ims-reg-eye-open" src={eye} alt="" />
                 <span className="ims-reg-eye-shut" />
               </button>
             </div>
@@ -499,6 +473,19 @@ export const InternRegistration = ()=> {
           Already have an account? <button type="button" className="ims-reg-signin-btn" onClick={() => navigate('/login')}>Sign in</button>
         </p>
       </form>
+
+      {showVerificationPopup && (
+        <RegistrationVerificationPopup
+          type={verificationType}
+          value={verificationValue}
+          onClose={() => setShowVerificationPopup(false)}
+          onVerified={() => {
+            if (verificationType === 'email') setEmailVerified(true);
+            else setPhoneVerified(true);
+            setShowVerificationPopup(false);
+          }}
+        />
+      )}
     </div>
   );
 }

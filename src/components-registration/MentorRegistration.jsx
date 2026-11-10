@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./MentorRegistration.css";
 import { Header } from "../reusable-components/Header.jsx";
 import MentorRegistermainimage from "../assets/registration/mentor-register-illustartion-image.png";
 import MentorRegisterWhiteShield from "../assets/registration/mentor-register-shield.png";
 import MentorRegisterconnections from "../assets/registration/mentor-register-connections.png";
 import MentorRegisterstars from "../assets/registration/mentor-register-stars.png";
-import EyeOpenIcon from "../assets/registration/eye-open.png";
-import EyeCloseIcon from "../assets/registration/eye-close.png";
+import eye from "../assets/registration/eye.png";
+import eyeclose from "../assets/registration/eyeclose.png";
 import chevron from '../assets/registration/dropdown.png';
 
 const initialValues = {
@@ -26,32 +26,21 @@ const initialValues = {
 
 export const MentorRegistration = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [formValues, setFormValues] = useState({ ...initialValues });
 
-  const [formValues, setFormValues] = useState(
-    () => location.state?.formValues || { ...initialValues },
-  );
-
-  const [selectRole, setSelectRole] = useState(
-    () => location.state?.selectRole || "mentor",
-  );
+  const [selectRole, setSelectRole] = useState("mentor");
 
   const [errors, setErrors] = useState({});
 
   const [passwordShow, setPasswordShow] = useState(false);
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false);
 
-  const [termsAccepted, setTermsAccepted] = useState(
-    () => location.state?.termsAccepted || false,
-  );
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const [verifiedFields, setVerifiedFields] = useState(
-    () =>
-      location.state?.verifiedFields || {
-        email: false,
-        phone: false,
-      },
-  );
+  const [verifiedFields, setVerifiedFields] = useState({
+    email: false,
+    phone: false,
+  });
 
   const countryCodes = [
     { code: "+91", country: "India" },
@@ -156,57 +145,25 @@ export const MentorRegistration = () => {
     }
   };
 
-  const handleVerify = (type) => {
-    const isEmail = type === "email";
 
-    const value = isEmail
-      ? formValues.email.trim()
-      : formValues.phoneNumber.trim();
+  const handleVerifyEmail = () => {
+  if (isEmailVerified) return;
 
-    const fieldName = isEmail ? "email" : "phoneNumber";
+  if (!workEmail.trim()) {
+    setWorkEmailError("Please enter your work email");
+    return;
+  }
 
-    const isValid = isEmail
-      ? /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(value)
-      : /^\d{10}$/.test(value);
+  if (!emailRegex.test(workEmail.trim())) {
+    setWorkEmailError("Please enter a valid work email address");
+    return;
+  }
 
-    if (!value) {
-      setErrors((prev) => ({
-        ...prev,
-        [fieldName]: isEmail
-          ? "Email is required*"
-          : "Phone number is required*",
-      }));
-      return;
-    }
-
-    if (!isValid) {
-      setErrors((prev) => ({
-        ...prev,
-        [fieldName]: isEmail
-          ? "Enter a valid email address*"
-          : "Enter a valid 10-digit phone number*",
-      }));
-      return;
-    }
-
-    setErrors((prev) => ({
-      ...prev,
-      [fieldName]: "",
-    }));
-
-    navigate("/RegistrationOTP", {
-      state: {
-        verificationType: type,
-        email: isEmail ? value : "",
-        phoneNumber: isEmail ? "" : value,
-        countryCode: formValues.countryCode,
-        formValues,
-        termsAccepted,
-        verifiedFields,
-        selectRole,
-      },
-    });
-  };
+  setWorkEmailError("");
+  setVerificationType("email");
+  setVerificationValue(workEmail.trim());
+  setShowVerificationPopup(true);
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -297,13 +254,12 @@ export const MentorRegistration = () => {
 
   return (
     <div className="ims-mentor-conatiner">
-      <div className="ims-mentor-inner-container">
         <div className="ims-mentor-left-section">
           <Header />
 
           <div className="Ims-MentorRegister-middle-content">
             <div className="Ims-MentorRegister-main-content">
-              <h2>Empower the next generation of talent.</h2>
+              <h2>Empower the next generation of <br /> talent.</h2>
               <p>
                 Join a community of experts dedicated to guiding students
                 through their career
@@ -312,7 +268,7 @@ export const MentorRegistration = () => {
                 industry's future.
               </p>
             </div>
-          </div>
+          
 
           <div className="Ims-MentorRegister-image-content">
             <img
@@ -381,8 +337,15 @@ export const MentorRegistration = () => {
             </div>
           </div>
         </div>
-
+</div>
         <div className="ims-mentor-right-section">
+            <button
+            type="button"
+            className="ims-mentor-backbtn"
+            onClick={() => navigate("/welcome")}
+          >
+            Back to Selection
+          </button>
           <div className="ims-mentor-header-conatiner">
             <header className="ims-mentor-header">
               <h1>Create your account</h1>
@@ -399,29 +362,16 @@ export const MentorRegistration = () => {
                     <label className="ims-reg-label ims-reg-kicker">
                       Registering as <i className="ims-reg-required">*</i>
                     </label>
-                    <div className="ims-reg-select ims-reg-select-wide">
-                     
-<select
-  className="ims-reg-select-input"
-  value={selectRole}
-  onChange={(e) => {
-    setSelectRole(e.target.value);
-    setErrors((prev) => ({
-      ...prev,
-      role: "",
-    }));
-  }}
-  aria-label="Registering as"
-  aria-invalid={Boolean(errors.role)}
->
-
-                      
-                        <option className="ims-reg-option" value="">Select</option>
-                        <option className="ims-reg-option">Intern</option>
-                        <option className="ims-reg-option">Student</option>
-                        <option className="ims-reg-option">Employer</option>
-                      </select>
-                      <img className="ims-reg-chevron" src={chevron} alt="ims-reg-chevron" />
+                    <div className="ims-reg-select ims-reg-select-wide">                   
+                     <select 
+                          id="ims-company-registration-registering-as"
+                          name="registeringAs"
+                          className="ims-company-registration-form-drop-down" 
+                          defaultValue="Company"
+                          disabled
+                        >
+                          <option value="Mentor">Mentor</option>
+                        </select>
                     </div>
                     {errors.role && <p className="ims-reg-error">{errors.role}</p>}
                     </div>
@@ -468,7 +418,7 @@ export const MentorRegistration = () => {
                           ? "ims-mentor-verified-btn"
                           : "ims-mentor-verify-btn"
                       }
-                      onClick={() => handleVerify("email")}
+                      onClick={handleVerifyEmail}
                     >
                       {verifiedFields.email ? "Verified" : "Verify"}
                     </button>
@@ -667,7 +617,7 @@ export const MentorRegistration = () => {
                       }}
                     >
                       <img
-                        src={passwordShow ? EyeOpenIcon : EyeCloseIcon}
+                        src={passwordShow ? eye : eyeclose}
                         className={
                           passwordShow
                             ? "ims-mentor-password-eye-open"
@@ -713,7 +663,7 @@ export const MentorRegistration = () => {
                       }}
                     >
                       <img
-                        src={confirmPasswordShow ? EyeOpenIcon : EyeCloseIcon}
+                        src={confirmPasswordShow ? eye : eyeclose}
                         className={
                           confirmPasswordShow
                             ? "ims-mentor-password-eye-open"
@@ -787,6 +737,6 @@ export const MentorRegistration = () => {
           </div>
         </div>
       </div>
-    </div>
+
   );
 };

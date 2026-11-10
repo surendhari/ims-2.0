@@ -38,13 +38,7 @@ const roles = [
 
          <div className='ims-welcome-audit-main'>
         
-        <div className='ims-welcome-audit'>
-          <img src={auditsub} alt="ims-welcome-audit" className='ims-welcome-audit-image'/>
-          <div className='ims-welcome-audit-text'>
-          <p className='ims-welcome-audit-titel'>Unified Platform</p>
-          <p className='ims-welcome-audit-subtitel'>Seamless identity, role-based workflows, and    organizational compliance</p>
-          </div>
-        </div>
+       
 
            <div className='ims-welcome-audit'>
           <img src={auditmain} alt="ims-welcome-audit" className='ims-welcome-audit-image'/>
@@ -59,7 +53,7 @@ const roles = [
             <hr/>
           </div>
          
-          <p className='ims-welcome-para'>“Empowering our cross-functional teams with seamless access, verified identity governance, and <br />automated onboarding at global scale.”</p>
+         
           
           <div className='ims-welcome-author'>
            <img src={author} alt="ims-welcome-author" className='ims-welcome-author-img' />
@@ -105,10 +99,10 @@ const roles = [
       setIsOpen(false);
 
       const roleRoutes = {
-        Company: "/components-registration/CompanyRegistration",
-        Intern:"/components-registration/InternRegistration",
-        Mentor:"/components-registration/MentorRegistration",
-        HR:"/components-registration/HrRegistration"
+        Company: "/CompanyRegistration",
+        Intern:"/InternRegistration",
+        Mentor:"/MentorRegistration",
+        HR:"/HrRegistration"
       };
 
       navigate(roleRoutes[role]);
