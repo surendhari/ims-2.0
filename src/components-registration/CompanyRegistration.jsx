@@ -399,6 +399,7 @@ const handleVerifyPhone = () => {
                                   type="text" 
                                   id="ims-company-registration-country-code"
                                   name="countryCode"
+                                  
                                   aria-label="Country Code"
                                   className="ims-company-registration-form-input-phoneNumber" 
                                   defaultValue="+91" 
@@ -409,6 +410,8 @@ const handleVerifyPhone = () => {
                                     type="tel" 
                                     id="ims-company-registration-phone"
                                     name="phoneNumber"
+                                    maxLength={10}
+                                    minLength={10}
                                     autoComplete="tel"
                                     className={`ims-company-registration-form-input ims-phone-number-field ims-company-registration-input-with-verify ${phoneNumberError ? "ims-input-error" : ""}`} 
                                     placeholder="Enter your number" 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./MentorRegistration.css";
+import RegistrationVerificationPopup from
+  "../reusable-components/RegistrationVerificationPopup";
 import { Header } from "../reusable-components/Header.jsx";
 import MentorRegistermainimage from "../assets/registration/mentor-register-illustartion-image.png";
 import MentorRegisterWhiteShield from "../assets/registration/mentor-register-shield.png";
@@ -34,6 +36,10 @@ export const MentorRegistration = () => {
 
   const [passwordShow, setPasswordShow] = useState(false);
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false);
+
+const [showVerificationPopup, setShowVerificationPopup] = useState(false);
+const [verificationType, setVerificationType] = useState("");
+const [verificationValue, setVerificationValue] = useState("");
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -147,21 +153,52 @@ export const MentorRegistration = () => {
 
 
   const handleVerifyEmail = () => {
-  if (isEmailVerified) return;
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 
-  if (!workEmail.trim()) {
-    setWorkEmailError("Please enter your work email");
+  if (!formValues.email.trim()) {
+    setErrors((prev) => ({
+      ...prev,
+      email: "Email is required",
+    }));
     return;
   }
 
-  if (!emailRegex.test(workEmail.trim())) {
-    setWorkEmailError("Please enter a valid work email address");
+  if (!emailRegex.test(formValues.email.trim())) {
+    setErrors((prev) => ({
+      ...prev,
+      email: "Enter a valid email address",
+    }));
     return;
   }
 
-  setWorkEmailError("");
   setVerificationType("email");
-  setVerificationValue(workEmail.trim());
+  setVerificationValue(formValues.email.trim());
+  setShowVerificationPopup(true);
+};
+
+
+
+const handleVerifyPhone = () => {
+  const phoneRegex = /^[6-9]\d{9}$/;
+
+  if (!formValues.phoneNumber.trim()) {
+    setErrors((prev) => ({
+      ...prev,
+      phoneNumber: "Phone number is required",
+    }));
+    return;
+  }
+
+  if (!phoneRegex.test(formValues.phoneNumber.trim())) {
+    setErrors((prev) => ({
+      ...prev,
+      phoneNumber: "Enter a valid 10-digit mobile number",
+    }));
+    return;
+  }
+
+  setVerificationType("phone");
+  setVerificationValue(formValues.phoneNumber.trim());
   setShowVerificationPopup(true);
 };
 
@@ -411,17 +448,19 @@ export const MentorRegistration = () => {
                       value={formValues.email}
                       onChange={handleChange}
                     />
-                    <button
-                      type="button"
-                      className={
-                        verifiedFields.email
-                          ? "ims-mentor-verified-btn"
-                          : "ims-mentor-verify-btn"
-                      }
-                      onClick={handleVerifyEmail}
-                    >
-                      {verifiedFields.email ? "Verified" : "Verify"}
-                    </button>
+                    {formValues.email.trim() && (
+  <button
+    type="button"
+    className={
+      verifiedFields.email
+        ? "ims-mentor-verified-btn"
+        : "ims-mentor-verify-btn"
+    }
+    onClick={handleVerifyEmail}
+  >
+    {verifiedFields.email ? "Verified" : "Verify"}
+  </button>
+)}
                   </div>
                 </div>
                 {errors.email && (
@@ -458,23 +497,31 @@ export const MentorRegistration = () => {
                         inputMode="numeric"
                         name="phoneNumber"
                         id="phoneNumber"
+                        maxLength={10}
+                        minLength={10}
                         autoComplete="tel-national"
                         onKeyDown={handleKeyDown}
                         placeholder="Enter your number"
                         value={formValues.phoneNumber}
                         onChange={handleChange}
                       />
-                      <button
+
+
+                      {formValues.phoneNumber.trim() && (
+                       <button
                         type="button"
                         className={
-                          verifiedFields.phone
-                            ? "ims-mentor-verified-btn"
-                            : "ims-mentor-verify-btn"
-                        }
-                        onClick={() => handleVerify("phone")}
-                      >
-                        {verifiedFields.phone ? "Verified" : "Verify"}
-                      </button>
+                        verifiedFields.phone
+                        ? "ims-mentor-verified-btn"
+                       : "ims-mentor-verify-btn"
+                       }
+                       onClick={handleVerifyPhone}
+                       >
+                       {verifiedFields.phone ? "Verified" : "Verify"}
+                        </button>
+                      )}
+
+
                     </div>
                   </div>
                 </div>
@@ -720,6 +767,29 @@ export const MentorRegistration = () => {
               Create Account
             </button>
           </form>
+
+          {showVerificationPopup && (
+  <RegistrationVerificationPopup
+    type={verificationType}
+    value={verificationValue}
+    onClose={() => setShowVerificationPopup(false)}
+    onVerified={() => {
+      if (verificationType === "email") {
+        setVerifiedFields((prev) => ({
+          ...prev,
+          email: true,
+        }));
+      } else {
+        setVerifiedFields((prev) => ({
+          ...prev,
+          phone: true,
+        }));
+      }
+
+      setShowVerificationPopup(false);
+    }}
+  />
+)}
 
           <div className="ims-mentor-divider-container">
             <hr className="ims-mentor-divider" />

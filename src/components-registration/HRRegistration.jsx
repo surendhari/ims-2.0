@@ -403,6 +403,8 @@ const [verificationValue, setVerificationValue] = useState("");
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
+                    maxLength={10}
+                    minLength={10}
                     placeholder="Enter your number"
                     className={`ims-hr-registration-form-input ${errors.phone ? "ims-hr-registration-error-border" : ""}`}
                   />
