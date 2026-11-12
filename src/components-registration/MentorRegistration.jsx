@@ -92,48 +92,6 @@ const [verificationValue, setVerificationValue] = useState("");
       [name]: value,
     }));
 
-    if (name === "email") {
-      setVerifiedFields((prev) => ({
-        ...prev,
-        email: false,
-      }));
-    }
-
-    if (name === "phoneNumber" || name === "countryCode") {
-      setVerifiedFields((prev) => ({
-        ...prev,
-        phone: false,
-      }));
-    }
-
-    if (name === "bio") {
-      if (!value.trim()) {
-        setErrors((prev) => ({
-          ...prev,
-          bio: "Bio / About You is required",
-        }));
-      } else if (value.trim().length < 10) {
-        setErrors((prev) => ({
-          ...prev,
-          bio: "Bio must contain at least 10 characters",
-        }));
-      } else if (value.length > 500) {
-        setErrors((prev) => ({
-          ...prev,
-          bio: "Bio cannot exceed 500 characters",
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          bio: "",
-        }));
-      }
-    } else {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
   };
 
   const handleKeyDown = (e) => {
@@ -376,14 +334,9 @@ const handleVerifyPhone = () => {
         </div>
 </div>
         <div className="ims-mentor-right-section">
-            <button
-            type="button"
-            className="ims-mentor-backbtn"
-            onClick={() => navigate("/welcome")}
-          >
-            Back to Selection
-          </button>
-          <div className="ims-mentor-header-conatiner">
+
+          <div className="ims-mentor-backbtn-align">
+             <div className="ims-mentor-header-conatiner">
             <header className="ims-mentor-header">
               <h1>Create your account</h1>
               <p>Complete your profile to start connecting with students.</p>
@@ -392,6 +345,18 @@ const handleVerifyPhone = () => {
           
           </div>
 
+          
+
+         
+            <button
+            type="button"
+            className="ims-mentor-backbtn"
+            onClick={() => navigate("/welcome")}
+          >
+            Back to Selection
+          </button>
+        
+ </div>
 
           <form onSubmit={handleSubmit} className="ims-mentor-reg-form">
 

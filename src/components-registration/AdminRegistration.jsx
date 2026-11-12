@@ -29,7 +29,6 @@ const [verificationType, setVerificationType] = useState("");
 const [verificationValue, setVerificationValue] = useState("");
 
 const [isEmailVerified, setIsEmailVerified] = useState(false);
-const [isPhoneVerified, setIsPhoneVerified] = useState(false);
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -102,19 +101,6 @@ const handleChange = (e) => {
   setFormData((prev) => ({
     ...prev,
     [name]: value,
-  }));
-
-  if (name === "email") {
-    setIsEmailVerified(false);
-  }
-
-  if (name === "phone") {
-    setIsPhoneVerified(false);
-  }
-
-  setErrors((prev) => ({
-    ...prev,
-    [name]: "",
   }));
 };
 
