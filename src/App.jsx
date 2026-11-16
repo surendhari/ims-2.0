@@ -65,9 +65,9 @@ const router = createBrowserRouter([
     element:<HRRegistration/>
   }
 ],
-
-
-
+{
+    basename: "/ims",
+  }
 );
 
 function App() {
