@@ -15,6 +15,7 @@ import { MentorRegistration } from "./components-registration/MentorRegistration
 import { HRRegistration } from "./components-registration/HRRegistration.jsx";
 
 const router = createBrowserRouter([
+  
   {
     path: "/",
     element: <LandingPage />
