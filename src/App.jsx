@@ -67,7 +67,7 @@ const router = createBrowserRouter([
   }
 ],
 {
-    basename: "/ims-2-0",
+    basename: "/ims-2.0",
   }
 );
 
