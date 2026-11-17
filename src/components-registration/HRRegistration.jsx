@@ -294,15 +294,18 @@ const [verificationValue, setVerificationValue] = useState("");
       <div className="ims-hr-registration-right-section">
          
         <div className="ims-hr-registration-form-container">
-           <button className="ims-hr-registration-backbtn" onClick={() => navigate("/welcome")}> Back to Selection</button>
-          <h2 className="ims-hr-registration-form-title">
+
+          <div className="ims-hr-backbtn-align">
+            <div>
+               <h2 className="ims-hr-registration-form-title">
             Create your account
           </h2>
-
           <p className="ims-hr-registration-form-description">
             Join our ecosystem of professional employers.
           </p>
-
+            </div>
+             <button className="ims-hr-registration-backbtn" onClick={() => navigate("/welcome")}> Back to Selection</button>
+          </div>
           <form onSubmit={handleSubmit}>
             <div className="ims-hr-registration-form-group">
               <label className="ims-hr-registration-form-label">

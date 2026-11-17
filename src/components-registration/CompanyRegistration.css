@@ -7,6 +7,15 @@
     max-width: 1920px;
 }
 
+.ims-company-registration-form-subtitle{
+  font-size: 14px;
+}
+
+.ims-company-backbtn-align{
+  display: flex;
+  justify-content: space-between;
+}
+
 .ims-company-registration-container{
   width:100%;
   min-height:100vh;

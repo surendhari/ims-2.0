@@ -8,9 +8,8 @@
 }
 
 .ims-hr-registration-left-section {
-  width: 40%;
+  width: 45%;
   height: auto;
-  padding: 35px 50px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,6 +36,11 @@
 .ims-hr-registration-illustration-image {
   width: 390px;
   height: auto;
+}
+
+.ims-hr-backbtn-align{
+  display: flex;
+  justify-content: space-between;
 }
 
 .ims-hr-registration-talent-card {
@@ -118,7 +122,7 @@
 }
 
 .ims-hr-registration-right-section {
-  width: 60%;
+  width: 55%;
   height: auto;
   padding: 35px 50px 0;
   display: flex;
@@ -517,7 +521,7 @@
   .ims-hr-registration-right-section {
     width: 50%;
     min-width: 0;
-    padding: 15px 14px;
+   
   }
 
   .ims-hr-registration-heading {

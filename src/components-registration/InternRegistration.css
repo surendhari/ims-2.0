@@ -3,18 +3,15 @@
   min-height: 100vh;
   background: linear-gradient(to left, #ffffff 35%, #566b93 93%);
   display: flex;
+  padding: 20px;
   justify-content: space-around;
   gap: 40px;
   margin: auto;
 }
 
 .ims-reg-left {
-  display: flex;
-  flex-direction: column;
   width: 500px; 
-  justify-content: flex-start;
   color: #fff;
-  padding: 20px;
 }
 
 .ims-reg-title {
@@ -415,17 +412,13 @@
   border-color: #e11d48;
 }
 
-
-
- 
-
 @media screen and (max-width:1920px) {
   .ims-reg-left{
-     max-width: 800px;
+     max-width: 600px;
      width: 50%;
   }
   .ims-reg-form{
-    max-width: 900px;
+    max-width: 1000px;
       width: 50%;
   }
   .ims-reg-page{
@@ -434,7 +427,7 @@
   width: 100%;
   }
   .ims-reg-art{
-    width: 600px;
+    width: 500px;
     height: auto;
   }
   .ims-reg-input,

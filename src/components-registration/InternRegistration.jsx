@@ -1,148 +1,186 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './InternRegistration.css';
-
-import illustration from '../assets/registration/Intern-Illustration.png';
-import verifiedIcon from '../assets/registration/Verified.png';
-import trackingIcon from '../assets/registration/Tracking.png';
-import avatar from '../assets/registration/Avatar.png';
-import eye from '../assets/registration/eye.png';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./InternRegistration.css";
+import illustration from "../assets/registration/Intern-Illustration.png";
+import verifiedIcon from "../assets/registration/Verified.png";
+import trackingIcon from "../assets/registration/Tracking.png";
+import eye from "../assets/registration/eye.png";
 import eyeclose from "../assets/registration/eyeclose.png";
+import { Header } from "../reusable-components/Header";
+import RegistrationVerificationPopup from "../reusable-components/RegistrationVerificationPopup";
 
-import { Header } from '../reusable-components/Header';
-import RegistrationVerificationPopup from '../reusable-components/RegistrationVerificationPopup';
-
-const fieldsOfStudy = [
-  'Computer Science',
-  'Information Technology',
-  'Data Science',
-  'Design',
-  'Business Administration',
-  'Mechanical Engineering',
-];
-
-const graduationYears = ['2024', '2025', '2026', '2027', '2028', '2029', '2030'];
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-function validateDob(value) {
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
-  if (!match) return 'Enter date of birth as mm/dd/yyyy.';
-  const month = Number(match[1]);
-  const day = Number(match[2]);
-  const year = Number(match[3]);
-  const date = new Date(year, month - 1, day);
-  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
-    return 'Enter a valid date of birth.';
-  }
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  if (date > today) return 'Date of birth cannot be in the future.';
-  let age = today.getFullYear() - year;
-  const monthDelta = today.getMonth() - (month - 1);
-  if (monthDelta < 0 || (monthDelta === 0 && today.getDate() < day)) age -= 1;
-  if (age < 16 || age > 100) return 'Enter a valid date of birth.';
-  return '';
-}
-
-function validateResume(file) {
-  if (!file) return 'Upload your resume.';
-  const name = file.name.toLowerCase();
-  const extensionOk = name.endsWith('.pdf') || name.endsWith('.doc') || name.endsWith('.docx');
-  if (!extensionOk) return 'Upload a PDF or DOCX file.';
-  if (file.size > 5 * 1024 * 1024) return 'Resume must be 5MB or smaller.';
-  return '';
-}
-
-function validatePassword(value) {
-  const hasUpper = /[A-Z]/.test(value);
-  const hasLower = /[a-z]/.test(value);
-  const hasNumberOrSymbol = /[0-9]/.test(value) || /[^A-Za-z0-9]/.test(value);
-  if (!value || value.length < 8 || !hasUpper || !hasLower || !hasNumberOrSymbol) {
-    return 'Use at least 8 characters with uppercase, lowercase, and a number or symbol.';
-  }
-  return '';
-}
-
-export const InternRegistration = ()=> {
+export const InternRegistration = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const saved = location.state?.registration ?? {};
-  const [role] = useState(location.state?.role ?? saved.role ?? 'Intern');
+
+  const [formData, setFormData] = useState({
+    registeringAs: "Intern",
+    fullName: "",
+    email: "",
+    phone: "",
+    dob: "",
+    college: "",
+    fieldOfStudy: "",
+    graduationYear: "",
+    resume: null,
+    password: "",
+    confirmPassword: "",
+    agreed: false,
+    isEmailVerified: false,
+    isPhoneVerified: false,
+  });
+
   const [showVerificationPopup, setShowVerificationPopup] = useState(false);
-  const [verificationType, setVerificationType] = useState('');
-  const [verificationValue, setVerificationValue] = useState('');
-  const [fullName, setFullName] = useState(saved.fullName ?? '');
-  const [email, setEmail] = useState(saved.email ?? '');
-  const [phone, setPhone] = useState(saved.phone ?? '');
-  const [dob, setDob] = useState(saved.dob ?? '');
-  const [college, setCollege] = useState(saved.college ?? '');
-  const [fieldOfStudy, setFieldOfStudy] = useState(saved.fieldOfStudy ?? '');
-  const [graduationYear, setGraduationYear] = useState(saved.graduationYear ?? '');
-  const [resume, setResume] = useState(saved.resume ?? null);
-  const [errors, setErrors] = useState({});
-  const [password, setPassword] = useState(saved.password ?? '');
-  const [confirmPassword, setConfirmPassword] = useState(saved.confirmPassword ?? '');
+  const [verificationType, setVerificationType] = useState("");
+  const [verificationValue, setVerificationValue] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreed, setAgreed] = useState(Boolean(saved.agreed));
-  const [emailVerified, setEmailVerified] = useState(Boolean(saved.emailVerified));
-  const [phoneVerified, setPhoneVerified] = useState(Boolean(saved.phoneVerified));
+  const [errors, setErrors] = useState({});
 
-  const clearError = (key) => {
-    setErrors((current) => {
-      if (!current[key]) return current;
-      const next = { ...current };
-      delete next[key];
-      return next;
-    });
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleCreate = (e) => {
-    e.preventDefault();
-    const next = {};
-    if (!role) next.role = 'Select how you are registering.';
-    if (fullName.trim().length < 2) next.fullName = 'Enter your full name.';
-    if (!emailPattern.test(email.trim())) next.email = 'Enter a valid email address.';
-    else if (!emailVerified) next.email = 'Please verify the Phone number or email';
-    if (!/^\d{10}$/.test(phone.replace(/\D/g, ''))) next.phone = 'Enter a valid 10-digit phone number.';
-    else if (!phoneVerified) next.phone = 'Please verify the Phone number or email';
-    const dobError = validateDob(dob);
-    if (dobError) next.dob = dobError;
-    if (college.trim().length < 2) next.college = 'Enter your college or university.';
-    if (!fieldOfStudy) next.fieldOfStudy = 'Select your field of study.';
-    if (!graduationYear) next.graduationYear = 'Select your graduation year.';
-    const resumeError = validateResume(resume);
-    if (resumeError) next.resume = resumeError;
-    const passwordError = validatePassword(password);
-    if (passwordError) next.password = passwordError;
-    if (!confirmPassword) next.confirmPassword = 'Confirm your password.';
-    else if (password !== confirmPassword) next.confirmPassword = 'Passwords do not match.';
-    if (!agreed) next.agreed = 'Agree to the Terms of Service and Privacy Policy.';
-    setErrors(next);
-  };
+  const fieldsOfStudy = [
+    "Computer Science",
+    "Information Technology",
+    "Data Science",
+    "Design",
+    "Business Administration",
+    "Mechanical Engineering",
+  ];
+
+  const graduationYears = [
+    "2024",
+    "2025",
+    "2026",
+    "2027",
+    "2028",
+    "2029",
+    "2030",
+  ];
 
   const handleVerify = (field) => {
-    if (field === 'email' && emailVerified) return;
-    if (field === 'phone' && phoneVerified) return;
-    if (field === 'email' && !emailPattern.test(email.trim())) {
-      setErrors((current) => ({ ...current, email: 'Enter a valid email address.' }));
-      return;
-    }
-    if (field === 'phone' && !/^\d{10}$/.test(phone.replace(/\D/g, ''))) {
-      setErrors((current) => ({ ...current, phone: 'Enter a valid 10-digit phone number.' }));
-      return;
-    }
-    clearError(field);
     setVerificationType(field);
-    setVerificationValue(field === 'email' ? email.trim() : phone.replace(/\D/g, ''));
+
+    setVerificationValue(
+      field === "email"
+        ? formData.email.trim()
+        : formData.phone.replace(/\D/g, ""),
+    );
+
     setShowVerificationPopup(true);
+  };
+
+  const handleVerifySuccess = () => {
+    setFormData((prev) => ({
+      ...prev,
+      ...(verificationType === "email" && {
+        isEmailVerified: true,
+      }),
+      ...(verificationType === "phone" && {
+        isPhoneVerified: true,
+      }),
+    }));
+
+    setShowVerificationPopup(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    console.log("Intern Registration Submitted", formData);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Please enter your full name";
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    } else if (!formData.isEmailVerified) {
+      newErrors.email = "Please verify your email";
+    }
+
+    if (!/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = "Please enter a valid 10-digit phone number";
+    } else if (!formData.isPhoneVerified) {
+      newErrors.phone = "Please verify your phone number";
+    }
+
+    const dobMatch = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/.test(
+      formData.dob,
+    );
+
+    if (!dobMatch) {
+      newErrors.dob = "Please enter a valid DOB (mm/dd/yyyy)";
+    } else {
+      const [month, day, year] = formData.dob.split("/").map(Number);
+      const date = new Date(year, month - 1, day);
+
+      if (
+        date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day ||
+        date > new Date()
+      ) {
+        newErrors.dob = "Please enter a valid date of birth";
+      }
+    }
+
+    if (!formData.college.trim()) {
+      newErrors.college = "Please enter your college name";
+    }
+
+    if (!formData.fieldOfStudy) {
+      newErrors.fieldOfStudy = "Please select your field of study";
+    }
+
+    if (!formData.graduationYear) {
+      newErrors.graduationYear = "Please select graduation year";
+    }
+
+    if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    } else if (
+      !/[A-Z]/.test(formData.password) ||
+      !/[a-z]/.test(formData.password) ||
+      !/[0-9]/.test(formData.password) ||
+      !/[^A-Za-z0-9]/.test(formData.password)
+    ) {
+      newErrors.password =
+        "Password must contain uppercase, lowercase, number and symbol";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    if (!formData.agreed) {
+      newErrors.agreed = "Please agree to Terms and Conditions";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
     <div className="ims-reg-page">
       <section className="ims-reg-left">
-        <Header/>
+        <Header />
 
         <div className="ims-reg-intro">
           <h1 className="ims-reg-title">
@@ -150,335 +188,425 @@ export const InternRegistration = ()=> {
             <br className="ims-reg-break" />
             excellence starts here.
           </h1>
+
           <p className="ims-reg-lead">
-            Join thousands of ambitious students securing world-class internships at
+            Join thousands of ambitious students securing world-class
+            internships at
             <br className="ims-reg-break" />
             leading tech companies and creative agencies.
           </p>
         </div>
 
         <div className="ims-reg-art-wrap">
-          <img className="ims-reg-art" src={illustration} alt="Intern with a laptop" />
+          <img
+            className="ims-reg-art"
+            src={illustration}
+            alt="Intern with a laptop"
+          />
         </div>
 
         <div className="ims-reg-features">
-        <div className="ims-reg-feature">
-          <img className="ims-reg-feature-icon" src={verifiedIcon} alt="" />
-          <div className="ims-reg-feature-copy">
-            <strong className="ims-reg-feature-title">Verified Employers</strong>
-            <span className="ims-reg-feature-text">Connect with pre-vetted top-tier companies worldwide.</span>
+          <div className="ims-reg-feature">
+            <img className="ims-reg-feature-icon" src={verifiedIcon} alt="" />
+
+            <div className="ims-reg-feature-copy">
+              <strong className="ims-reg-feature-title">
+                Verified Employers
+              </strong>
+
+              <span className="ims-reg-feature-text">
+                Connect with pre-vetted top-tier companies worldwide.
+              </span>
+            </div>
+          </div>
+
+          <div className="ims-reg-feature">
+            <img className="ims-reg-feature-icon" src={trackingIcon} alt="" />
+
+            <div className="ims-reg-feature-copy">
+              <strong className="ims-reg-feature-title">Smart Tracking</strong>
+
+              <span className="ims-reg-feature-text">
+                Manage all your applications in one organized dashboard.
+              </span>
+            </div>
           </div>
         </div>
-
-        <div className="ims-reg-feature">
-          <img className="ims-reg-feature-icon" src={trackingIcon} alt="" />
-          <div className="ims-reg-feature-copy">
-            <strong className="ims-reg-feature-title">Smart Tracking</strong>
-            <span className="ims-reg-feature-text">Manage all your applications in one organized dashboard.</span>
-          </div>
-        </div>
-        </div>
-
-      
       </section>
 
-      <form className="ims-reg-form" onSubmit={handleCreate} noValidate>
-        
+      <form className="ims-reg-form" onSubmit={handleSubmit}>
         <div className="ims-reg-head">
-          <div className='ims-reg-backbtnalign'>
+          <div className="ims-reg-backbtnalign">
+            <div>
+              <h2 className="ims-reg-heading">Create your account</h2>
+              <p className="ims-reg-sub">
+                Fill in the details below to create your professional account
+              </p>
+            </div>
 
-         <div>
-
-           <h2 className="ims-reg-heading">Create your account</h2>
-          <p className="ims-reg-sub">Fill in the details below to create your professional account</p>
-          
+            <button
+              type="button"
+              className="ims-company-backbtn"
+              onClick={() => navigate("/welcome")}
+            >
+              Back to Selection
+            </button>
           </div>
-
-            <button type="button" className="ims-company-backbtn" onClick={() => navigate('/welcome')}>
-          Back to Selection
-        </button>
-        
-        </div>
-         
         </div>
 
         <div className="ims-reg-role">
           <label className="ims-reg-label ims-reg-kicker">
             Registering as <i className="ims-reg-required">*</i>
           </label>
+
           <div className="ims-reg-select ims-reg-select-wide">
-              <select 
-                          id="ims-company-registration-registering-as"
-                          name="registeringAs"
-                          className="ims-company-registration-form-drop-down" 
-                          defaultValue="Company"
-                          disabled
-                        >
-                          <option value="Intern">Intern</option>
-                        </select>
-           
+            <select
+              name="registeringAs"
+              className="ims-company-registration-form-drop-down"
+              value={formData.registeringAs}
+              disabled
+            >
+              <option value="Intern">Intern</option>
+            </select>
           </div>
         </div>
 
         <div className="ims-reg-grid">
-          <div className={`ims-reg-field${errors.fullName ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Full Name <i className="ims-reg-required">*</i></label>
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Full Name <i className="ims-reg-required">*</i>
+            </label>
+
             <input
               className="ims-reg-input"
-
               type="text"
+              name="fullName"
               placeholder="Enter your full name"
-              value={fullName}
-              aria-invalid={Boolean(errors.fullName)}
-              onChange={(e) => {
-                setFullName(e.target.value);
-                clearError('fullName');
-              }}
+              value={formData.fullName}
+              onChange={handleChange}
             />
-            {errors.fullName && <p className="ims-reg-error">{errors.fullName}</p>}
+
+            {errors.fullName && (
+              <small className="ims-reg-error">{errors.fullName}</small>
+            )}
           </div>
-          <div className={`ims-reg-field${errors.email ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Email Address <i className="ims-reg-required">*</i></label>
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Email Address <i className="ims-reg-required">*</i>
+            </label>
+
             <div className="ims-reg-email">
               <input
                 className="ims-reg-input"
-
                 type="email"
+                name="email"
                 placeholder="Enter your email address"
-                value={email}
-                aria-invalid={Boolean(errors.email)}
+                value={formData.email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailVerified(false);
-                  clearError('email');
+                  setFormData((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                    isEmailVerified: false,
+                  }));
+                  setErrors((prev) => ({ ...prev, email: "" }));
                 }}
               />
-            {email.trim() && (
+
+              {formData.email.trim() && (
                 <button
-                type="button"
-               className={emailVerified ? 'ims-reg-verify ims-reg-verified' : 'ims-reg-verify'}
-                onClick={() => handleVerify('email')}
-               >
-                {emailVerified ? 'Verified' : 'Verify'}
-               </button>
-)}
+                  type="button"
+                  className={
+                    formData.isEmailVerified
+                      ? "ims-reg-verify ims-reg-verified"
+                      : "ims-reg-verify"
+                  }
+                  onClick={() => handleVerify("email")}
+                  disabled={formData.isEmailVerified}
+                >
+                  {formData.isEmailVerified ? "Verified" : "Verify"}
+                </button>
+              )}
             </div>
-            {errors.email && <p className="ims-reg-error">{errors.email}</p>}
+
+            {errors.email && (
+              <small className="ims-reg-error">{errors.email}</small>
+            )}
           </div>
 
-          <div className={`ims-reg-field${errors.phone ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Phone Number <i className="ims-reg-required">*</i></label>
+          {/* Phone */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Phone Number <i className="ims-reg-required">*</i>
+            </label>
+
             <div className="ims-reg-phone">
-              <span className="ims-reg-phone-code"> +91 </span>
+              <span className="ims-reg-phone-code">+91</span>
+
               <input
                 className="ims-reg-input"
-
                 type="tel"
+                name="phone"
                 placeholder="Enter your number"
-                value={phone}
+                value={formData.phone}
                 maxLength={10}
-                minLength={10}
-                aria-invalid={Boolean(errors.phone)}
                 onChange={(e) => {
-                  setPhone(e.target.value);
-                  setPhoneVerified(false);
-                  clearError('phone');
+                  const phone = e.target.value.replace(/\D/g, "").slice(0, 10);
+
+                  setFormData((prev) => ({
+                    ...prev,
+                    phone,
+                    isPhoneVerified: false,
+                  }));
+                  setErrors((prev) => ({ ...prev, phone: "" }));
                 }}
               />
-            {phone.trim() && (
-            <button
-            type="button"
-            className={phoneVerified ? 'ims-reg-verify ims-reg-verified' : 'ims-reg-verify'}
-            onClick={() => handleVerify('phone')}
-           >
-           {phoneVerified ? 'Verified' : 'Verify'}
-           </button>
-)}
+
+              {formData.phone.trim() && (
+                <button
+                  type="button"
+                  className={
+                    formData.isPhoneVerified
+                      ? "ims-reg-verify ims-reg-verified"
+                      : "ims-reg-verify"
+                  }
+                  onClick={() => handleVerify("phone")}
+                  disabled={formData.isPhoneVerified}
+                >
+                  {formData.isPhoneVerified ? "Verified" : "Verify"}
+                </button>
+              )}
             </div>
-            {errors.phone && <p className="ims-reg-error">{errors.phone}</p>}
+
+            {errors.phone && (
+              <small className="ims-reg-error">{errors.phone}</small>
+            )}
           </div>
-          <div className={`ims-reg-field${errors.dob ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Date of Birth <i className="ims-reg-required">*</i></label>
+
+          {/* Date of Birth */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Date of Birth <i className="ims-reg-required">*</i>
+            </label>
+
             <input
               className="ims-reg-input"
-
               type="text"
+              name="dob"
               placeholder="mm/dd/yyyy"
-              value={dob}
-              aria-invalid={Boolean(errors.dob)}
-              onChange={(e) => {
-                setDob(e.target.value);
-                clearError('dob');
-              }}
+              value={formData.dob}
+              onChange={handleChange}
             />
-            {errors.dob && <p className="ims-reg-error">{errors.dob}</p>}
+
+            {errors.dob && (
+              <small className="ims-reg-error">{errors.dob}</small>
+            )}
           </div>
 
-          <div className={`ims-reg-field${errors.college ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">College / University <i className="ims-reg-required">*</i></label>
+          {/* College */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              College / University <i className="ims-reg-required">*</i>
+            </label>
+
             <input
               className="ims-reg-input"
-
               type="text"
+              name="college"
               placeholder="Enter your university name"
-              value={college}
-              aria-invalid={Boolean(errors.college)}
-              onChange={(e) => {
-                setCollege(e.target.value);
-                clearError('college');
-              }}
+              value={formData.college}
+              onChange={handleChange}
             />
-            {errors.college && <p className="ims-reg-error">{errors.college}</p>}
+
+            {errors.college && (
+              <small className="ims-reg-error">{errors.college}</small>
+            )}
           </div>
-          <div className={`ims-reg-field${errors.fieldOfStudy ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Field of Study <i className="ims-reg-required">*</i></label>
+
+          {/* Field of Study */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Field of Study <i className="ims-reg-required">*</i>
+            </label>
+
             <div className="ims-reg-select">
               <select
                 className="ims-reg-select-input"
-
-                value={fieldOfStudy}
-                onChange={(e) => {
-                  setFieldOfStudy(e.target.value);
-                  clearError('fieldOfStudy');
-                }}
-                aria-label="Field of Study"
-                aria-invalid={Boolean(errors.fieldOfStudy)}
+                name="fieldOfStudy"
+                value={formData.fieldOfStudy}
+                onChange={handleChange}
               >
-                <option className="ims-reg-option" value="">Select your field of study</option>
+                <option value="">Select your field of study</option>
+
                 {fieldsOfStudy.map((field) => (
-                  <option className="ims-reg-option" key={field}>{field}</option>
+                  <option key={field} value={field}>
+                    {field}
+                  </option>
                 ))}
               </select>
-             
             </div>
-            {errors.fieldOfStudy && <p className="ims-reg-error">{errors.fieldOfStudy}</p>}
+
+            {errors.fieldOfStudy && (
+              <small className="ims-reg-error">{errors.fieldOfStudy}</small>
+            )}
           </div>
 
-          <div className={`ims-reg-field${errors.graduationYear ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Graduation Year <i className="ims-reg-required">*</i></label>
+          {/* Graduation Year */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Graduation Year <i className="ims-reg-required">*</i>
+            </label>
+
             <div className="ims-reg-select">
               <select
                 className="ims-reg-select-input"
-
-                value={graduationYear}
-                onChange={(e) => {
-                  setGraduationYear(e.target.value);
-                  clearError('graduationYear');
-                }}
-                aria-label="Graduation Year"
-                aria-invalid={Boolean(errors.graduationYear)}
+                name="graduationYear"
+                value={formData.graduationYear}
+                onChange={handleChange}
               >
-                <option className="ims-reg-option" value="">Select your graduation year</option>
+                <option value="">Select your graduation year</option>
+
                 {graduationYears.map((year) => (
-                  <option className="ims-reg-option" key={year}>{year}</option>
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
                 ))}
               </select>
-             
             </div>
-            {errors.graduationYear && <p className="ims-reg-error">{errors.graduationYear}</p>}
+
+            {errors.graduationYear && (
+              <small className="ims-reg-error">{errors.graduationYear}</small>
+            )}
           </div>
-          <div className={`ims-reg-field${errors.resume ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Resume (optional) <i className="ims-reg-required">*</i></label>
+
+          {/* Resume - Optional */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">Resume (optional)</label>
+
             <label className="ims-reg-upload">
               <input
                 className="ims-reg-input ims-reg-file"
-
                 type="file"
-                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                aria-invalid={Boolean(errors.resume)}
+                name="resume"
+                accept=".pdf,.doc,.docx"
                 onChange={(e) => {
-                  setResume(e.target.files?.[0] || null);
-                  clearError('resume');
+                  setFormData((prev) => ({
+                    ...prev,
+                    resume: e.target.files?.[0] || null,
+                  }));
                 }}
               />
+
               <span className="ims-reg-upload-text">
                 <span className="ims-reg-upload-icon">↑</span>
-                {resume?.name || 'Upload PDF, DOCX (Max 5MB)'}
+                {formData.resume?.name || "Upload PDF, DOCX (Max 5MB)"}
               </span>
             </label>
-            {errors.resume && <p className="ims-reg-error">{errors.resume}</p>}
           </div>
 
-          <div className={`ims-reg-field${errors.password ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Password <i className="ims-reg-required">*</i></label>
+          {/* Password */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Password <i className="ims-reg-required">*</i>
+            </label>
+
             <div className="ims-reg-password">
               <input
                 className="ims-reg-input"
-
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
+                name="password"
                 placeholder="Create a strong password"
-                value={password}
-                aria-invalid={Boolean(errors.password)}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  clearError('password');
-                }}
+                value={formData.password}
+                onChange={handleChange}
               />
+
               <button
                 type="button"
-                className={`ims-reg-eye${showPassword ? ' ims-reg-eye-closed' : ''}`}
-
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                onClick={() => setShowPassword((visible) => !visible)}
+                className={`ims-reg-eye${showPassword ? " ims-reg-eye-closed" : ""}`}
+                aria-label="Toggle password visibility"
+                onClick={() => setShowPassword((prev) => !prev)}
               >
-                <img className="ims-reg-eye-open" src={showPassword ? eye: eyeclose} alt="" />
+                <img
+                  className="ims-reg-eye-open"
+                  src={showPassword ? eye : eyeclose}
+                  alt=""
+                />
                 <span className="ims-reg-eye-shut" />
               </button>
             </div>
-            {errors.password && <p className="ims-reg-error">{errors.password}</p>}
+
+            {errors.password && (
+              <small className="ims-reg-error">{errors.password}</small>
+            )}
           </div>
-          <div className={`ims-reg-field${errors.confirmPassword ? ' ims-reg-invalid' : ''}`}>
-            <label className="ims-reg-label">Confirm Password <i className="ims-reg-required">*</i></label>
+
+          {/* Confirm Password */}
+          <div className="ims-reg-field">
+            <label className="ims-reg-label">
+              Confirm Password <i className="ims-reg-required">*</i>
+            </label>
+
             <div className="ims-reg-password">
               <input
                 className="ims-reg-input"
-
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
                 placeholder="Confirm your password"
-                value={confirmPassword}
-                aria-invalid={Boolean(errors.confirmPassword)}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  clearError('confirmPassword');
-                }}
+                value={formData.confirmPassword}
+                onChange={handleChange}
               />
+
               <button
                 type="button"
-                className={`ims-reg-eye${showConfirmPassword ? ' ims-reg-eye-closed' : ''}`}
-
-                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                onClick={() => setShowConfirmPassword((visible) => !visible)}
+                className={`ims-reg-eye${showConfirmPassword ? " ims-reg-eye-closed" : ""}`}
+                aria-label="Toggle confirm password visibility"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
               >
-                <img className="ims-reg-eye-open" src={showConfirmPassword ? eye: eyeclose
- } alt="" />
+                <img
+                  className="ims-reg-eye-open"
+                  src={showConfirmPassword ? eye : eyeclose}
+                  alt=""
+                />
                 <span className="ims-reg-eye-shut" />
               </button>
             </div>
-            {errors.confirmPassword && <p className="ims-reg-error">{errors.confirmPassword}</p>}
+
+            {errors.confirmPassword && (
+              <small className="ims-reg-error">{errors.confirmPassword}</small>
+            )}
           </div>
         </div>
 
+        {/* Terms and Conditions */}
         <div className="ims-reg-agree-wrap">
           <label className="ims-reg-agree">
             <input
               className="ims-reg-checkbox"
-
               type="checkbox"
-              checked={agreed}
-              aria-invalid={Boolean(errors.agreed)}
-              onChange={(e) => {
-                setAgreed(e.target.checked);
-                clearError('agreed');
-              }}
+              name="agreed"
+              checked={formData.agreed}
+              onChange={handleChange}
             />
+
             <span className="ims-reg-agree-text">
-              I agree to the <a className="ims-reg-link" href="#">Terms of Service</a> and <a className="ims-reg-link" href="#">Privacy Policy</a>
+              I agree to the{" "}
+              <a className="ims-reg-link" href="#">
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a className="ims-reg-link" href="#">
+                Privacy Policy
+              </a>
             </span>
           </label>
-          {errors.agreed && <p className="ims-reg-error">{errors.agreed}</p>}
+
+          {errors.agreed && (
+            <small className="ims-reg-error">{errors.agreed}</small>
+          )}
         </div>
 
-        <button type="submit" className="ims-reg-submit">Create Account</button>
+        <button type="submit" className="ims-reg-submit">
+          Create Account
+        </button>
 
         <div className="ims-reg-or">
           <span className="ims-reg-or-line" />
@@ -487,7 +615,14 @@ export const InternRegistration = ()=> {
         </div>
 
         <p className="ims-reg-signin">
-          Already have an account? <button type="button" className="ims-reg-signin-btn" onClick={() => navigate('/login')}>Sign in</button>
+          Already have an account?{" "}
+          <button
+            type="button"
+            className="ims-reg-signin-btn"
+            onClick={() => navigate("/login")}
+          >
+            Sign in
+          </button>
         </p>
       </form>
 
@@ -496,13 +631,18 @@ export const InternRegistration = ()=> {
           type={verificationType}
           value={verificationValue}
           onClose={() => setShowVerificationPopup(false)}
-          onVerified={() => {
-            if (verificationType === 'email') setEmailVerified(true);
-            else setPhoneVerified(true);
-            setShowVerificationPopup(false);
-          }}
+          onVerified={handleVerifySuccess}
+        />
+      )}
+
+      {showVerificationPopup && (
+        <RegistrationVerificationPopup
+          type={verificationType}
+          value={verificationValue}
+          onClose={() => setShowVerificationPopup(false)}
+          onVerified={handleVerifySuccess}
         />
       )}
     </div>
   );
-}
+};
